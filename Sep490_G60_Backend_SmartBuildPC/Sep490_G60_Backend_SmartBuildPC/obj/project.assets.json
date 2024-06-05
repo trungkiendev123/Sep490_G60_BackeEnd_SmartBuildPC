@@ -2406,11 +2406,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\SHD\\Desktop\\Sep490_G60\\Sep490_G60_SmartPCBuild_BE\\Sep490_G60_Backend_SmartBuildPC\\Sep490_G60_Backend_SmartBuildPC\\Sep490_G60_Backend_SmartBuildPC.csproj",
+      "projectUniqueName": "C:\\Users\\SHD\\Desktop\\Backend\\Sep490_G60_BackeEnd_SmartBuildPC\\Sep490_G60_Backend_SmartBuildPC\\Sep490_G60_Backend_SmartBuildPC\\Sep490_G60_Backend_SmartBuildPC.csproj",
       "projectName": "Sep490_G60_Backend_SmartBuildPC",
-      "projectPath": "C:\\Users\\SHD\\Desktop\\Sep490_G60\\Sep490_G60_SmartPCBuild_BE\\Sep490_G60_Backend_SmartBuildPC\\Sep490_G60_Backend_SmartBuildPC\\Sep490_G60_Backend_SmartBuildPC.csproj",
+      "projectPath": "C:\\Users\\SHD\\Desktop\\Backend\\Sep490_G60_BackeEnd_SmartBuildPC\\Sep490_G60_Backend_SmartBuildPC\\Sep490_G60_Backend_SmartBuildPC\\Sep490_G60_Backend_SmartBuildPC.csproj",
       "packagesPath": "C:\\Users\\SHD\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\SHD\\Desktop\\Sep490_G60\\Sep490_G60_SmartPCBuild_BE\\Sep490_G60_Backend_SmartBuildPC\\Sep490_G60_Backend_SmartBuildPC\\obj\\",
+      "outputPath": "C:\\Users\\SHD\\Desktop\\Backend\\Sep490_G60_BackeEnd_SmartBuildPC\\Sep490_G60_Backend_SmartBuildPC\\Sep490_G60_Backend_SmartBuildPC\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\SHD\\AppData\\Roaming\\NuGet\\NuGet.Config",
