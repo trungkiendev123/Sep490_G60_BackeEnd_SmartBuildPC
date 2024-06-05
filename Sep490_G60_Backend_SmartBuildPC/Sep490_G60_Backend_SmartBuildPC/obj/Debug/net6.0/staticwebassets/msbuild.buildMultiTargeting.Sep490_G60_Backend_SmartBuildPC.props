@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Sep490_G60_Backend_SmartBuildPC.props" />
+</Project>
