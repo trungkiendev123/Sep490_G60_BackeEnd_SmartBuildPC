@@ -44,6 +44,57 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
 
 
 
+        [HttpGet("GetProductsByBrand")]
+[ProducesResponseType(StatusCodes.Status200OK)]
+[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+public async Task<ActionResult<ApiResponse>> GetProductsByBrand(string brandName)
+{
+    var _response = new ApiResponse();
+    try
+    {
+        List<ProductDTO> products = await repository.GetProductByBrand(brandName);
+        _response.StatusCode = HttpStatusCode.OK;
+        _response.Result = products;
+        _response.IsSuccess = true;
+        return Ok(_response);
+    }
+    catch (Exception ex)
+    {
+        _response.IsSuccess = false;
+        _response.ErrorMessages = new List<string> { ex.Message };
+        return StatusCode(StatusCodes.Status500InternalServerError, _response);
+    }
+}
+
+
+
+[HttpGet("GetProductsByGroup")]
+[ProducesResponseType(StatusCodes.Status200OK)]
+[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+public async Task<ActionResult<ApiResponse>> GetProductsByGroup(string name)
+{
+    var _response = new ApiResponse();
+    try
+    {
+        List<ProductDTO> products = await repository.GetProductByGroup(name);
+        _response.StatusCode = HttpStatusCode.OK;
+        _response.Result = products;
+        _response.IsSuccess = true;
+        return Ok(_response);
+    }
+    catch (Exception ex)
+    {
+        _response.IsSuccess = false;
+        _response.ErrorMessages = new List<string> { ex.Message };
+        return StatusCode(StatusCodes.Status500InternalServerError, _response);
+    }
+}
+
+
+        
+
+
+
         
     }
 }
