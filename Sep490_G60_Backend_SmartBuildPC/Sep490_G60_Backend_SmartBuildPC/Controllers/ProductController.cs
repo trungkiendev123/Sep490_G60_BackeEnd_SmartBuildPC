@@ -91,30 +91,27 @@ public async Task<ActionResult<ApiResponse>> GetProductsByGroup(string name)
 }
 
 
-public async Task<List<ProductDTO>> GetAllProducts()
+[HttpGet("GetAllProducts")]
+[ProducesResponseType(StatusCodes.Status200OK)]
+[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+public async Task<ActionResult<ApiResponse>> GetAllProducts()
 {
+    var _response = new ApiResponse();
     try
     {
-        var products = await _context.Products
-            .Select(n => new ProductDTO
-            {
-                ProductId = n.ProductId,
-                CategoryName = n.Category.CategoryName,
-                ProductName = n.ProductName,
-                Description = n.Description,
-                Price = n.Price,
-                Warranty = n.Warranty,
-                Brand = n.Brand
-            })
-            .ToListAsync();
-        return products;
+        List<ProductDTO> products = await repository.GetAllProducts();
+        _response.StatusCode = HttpStatusCode.OK;
+        _response.Result = products;
+        _response.IsSuccess = true;
+        return Ok(_response);
     }
     catch (Exception ex)
     {
-        throw new Exception("An error occurred while getting all products.", ex);
+        _response.IsSuccess = false;
+        _response.ErrorMessages = new List<string> { ex.Message };
+        return StatusCode(StatusCodes.Status500InternalServerError, _response);
     }
 }
-
 
         
 
