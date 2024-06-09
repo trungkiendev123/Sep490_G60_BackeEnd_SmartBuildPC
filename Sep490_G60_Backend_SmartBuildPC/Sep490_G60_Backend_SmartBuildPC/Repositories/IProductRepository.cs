@@ -9,6 +9,8 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
         Task<List<ProductDTO>> GetProductByBrand(string brandName);
         
         Task<List<ProductDTO>> GetProductByGroup(string name);
-        
+
+        Task<IEnumerable<ProductDTO>> GetProductsByCategory(int categoryID);
+
     }
 }
