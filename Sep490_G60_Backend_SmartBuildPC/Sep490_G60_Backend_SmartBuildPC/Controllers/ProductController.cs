@@ -91,6 +91,31 @@ public async Task<ActionResult<ApiResponse>> GetProductsByGroup(string name)
 }
 
 
+public async Task<List<ProductDTO>> GetAllProducts()
+{
+    try
+    {
+        var products = await _context.Products
+            .Select(n => new ProductDTO
+            {
+                ProductId = n.ProductId,
+                CategoryName = n.Category.CategoryName,
+                ProductName = n.ProductName,
+                Description = n.Description,
+                Price = n.Price,
+                Warranty = n.Warranty,
+                Brand = n.Brand
+            })
+            .ToListAsync();
+        return products;
+    }
+    catch (Exception ex)
+    {
+        throw new Exception("An error occurred while getting all products.", ex);
+    }
+}
+
+
         
 
 
