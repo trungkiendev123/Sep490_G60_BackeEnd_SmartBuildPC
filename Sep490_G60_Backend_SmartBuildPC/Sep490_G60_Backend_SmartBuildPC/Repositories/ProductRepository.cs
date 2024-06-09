@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sep490_G60_Backend_SmartBuildPC.DTOs;
 using Sep490_G60_Backend_SmartBuildPC.Models;
-using Sep490_G60_Backend_SmartBuildPC.Repositories;
-using System.Collections.Generic;
 
-namespace Sep490_G60_SmartBuildPC_BE.Repositories
+namespace Sep490_G60_Backend_SmartBuildPC.Repositories
 {
     public class ProductRepository : IProductRepository
     {
