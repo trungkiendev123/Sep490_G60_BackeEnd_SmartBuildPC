@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Sep490_G60_Backend_SmartBuildPC.Models;
+using Sep490_G60_Backend_SmartBuildPC.Repositories;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<IBuildPCRepository,BuildPCRepository>();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllersWithViews().AddJsonOptions(option => option.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddDbContext<SMARTPCContext>(options => options.UseSqlServer(
