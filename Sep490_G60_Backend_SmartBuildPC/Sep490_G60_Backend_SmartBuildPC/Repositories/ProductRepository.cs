@@ -19,7 +19,7 @@ namespace Sep490_G60_SmartBuildPC_BE.Repositories
         {
             try
             {
-                var list = await _context.Products.Include(x => x.Category).Where(x => x.ProductId == id).Select(n => new ProductDTO { ProductId = n.ProductId,ProductName = n.ProductName }).SingleAsync() ;
+                var list = await _context.Products.Include(x => x.Category).Where(x => x.ProductId == id).Select(n => new ProductDTO { ProductId = n.ProductId,CategoryName = n.Category.CategoryName , ProductName = n.ProductName , Price = n.Price ,Description = n.Description ,Warranty = n.Warranty , Brand = n.Brand }).SingleAsync() ;
                 return list;
                 //return list;
             }
