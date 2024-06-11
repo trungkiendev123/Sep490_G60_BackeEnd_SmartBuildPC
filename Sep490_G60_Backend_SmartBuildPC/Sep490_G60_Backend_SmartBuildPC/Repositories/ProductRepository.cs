@@ -18,7 +18,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
         {
             try
             {
-                var list = await _context.Products.Include(x => x.Category).Where(x => x.ProductId == id).Select(n => new ProductDTO { ProductId = n.ProductId,ProductName = n.ProductName }).SingleAsync() ;
+                var list = await _context.Products.Include(x => x.Category).Where(x => x.ProductId == id).Select(n => new ProductDTO { ProductId = n.ProductId,CategoryName = n.Category.CategoryName , ProductName = n.ProductName , Price = n.Price ,Description = n.Description ,Warranty = n.Warranty , Brand = n.Brand }).SingleAsync() ;
                 return list;
                 //return list;
             }
@@ -82,6 +82,38 @@ public async Task<List<ProductDTO>> GetProductByGroup(string name)
     }
 }
 
+
+
+
+public async Task<List<ProductDTO>> GetAllProducts()
+{
+    try
+    {
+        var products = await _context.Products
+            .Select(n => new ProductDTO
+            {
+                ProductId = n.ProductId,
+                CategoryName = n.Category.CategoryName,
+                ProductName = n.ProductName,
+                Description = n.Description,
+                Price = n.Price,
+                Warranty = n.Warranty,
+                Brand = n.Brand
+            })
+            .ToListAsync();
+        return products;
+    }
+    catch (Exception ex)
+    {
+        throw new Exception("An error occurred while getting all products.", ex);
+    }
+}
+
+
+
+        
+
+
         public async Task<IEnumerable<ProductDTO>> GetProductsByCategory(int categoryID)
         {
             try
@@ -104,5 +136,6 @@ public async Task<List<ProductDTO>> GetProductByGroup(string name)
                 throw new Exception("An error occurred while getting the products by group.", ex);
             }
         }
+
     }
 }
