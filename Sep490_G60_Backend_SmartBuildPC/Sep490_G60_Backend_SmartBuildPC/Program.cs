@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Sep490_G60_Backend_SmartBuildPC.Models;
 using Sep490_G60_Backend_SmartBuildPC.Repositories;
 using System.Text.Json.Serialization;
@@ -24,7 +25,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors(builder =>
+{
+    builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+});
+app.UseHttpsRedirection();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
