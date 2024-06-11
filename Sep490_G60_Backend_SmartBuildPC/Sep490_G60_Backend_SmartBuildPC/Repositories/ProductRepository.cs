@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sep490_G60_Backend_SmartBuildPC.DTOs;
 using Sep490_G60_Backend_SmartBuildPC.Models;
-using Sep490_G60_Backend_SmartBuildPC.Repositories;
-using System.Collections.Generic;
+using System.Xml.Linq;
 
-namespace Sep490_G60_SmartBuildPC_BE.Repositories
+namespace Sep490_G60_Backend_SmartBuildPC.Repositories
 {
     public class ProductRepository : IProductRepository
     {
@@ -85,6 +84,7 @@ public async Task<List<ProductDTO>> GetProductByGroup(string name)
 
 
 
+
 public async Task<List<ProductDTO>> GetAllProducts()
 {
     try
@@ -112,6 +112,30 @@ public async Task<List<ProductDTO>> GetAllProducts()
 
 
         
+
+
+        public async Task<IEnumerable<ProductDTO>> GetProductsByCategory(int categoryID)
+        {
+            try
+            {
+                var products = await _context.Products.Include(x => x.Category).Where(x => x.CategoryId == categoryID).ToListAsync();
+
+                return products.Select(x => new ProductDTO
+                {
+                    ProductId = x.ProductId,
+                    ProductName = x.ProductName,
+                    Description = x.Description,
+                    Price = x.Price,
+                    Brand = x.Brand,
+                    Warranty = x.Warranty,
+                    CategoryName = x.Category.CategoryName
+                }); ;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while getting the products by group.", ex);
+            }
+        }
 
     }
 }
