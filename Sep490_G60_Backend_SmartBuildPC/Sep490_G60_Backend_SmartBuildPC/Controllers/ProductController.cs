@@ -70,12 +70,12 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
         [HttpGet("GetAllProducts")]
 [ProducesResponseType(StatusCodes.Status200OK)]
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-public async Task<ActionResult<ApiResponse>> GetAllProducts(int pageNumber = 1, int pageSize = 50)
+public async Task<ActionResult<ApiResponse>> GetAllProducts()
 {
     var _response = new ApiResponse();
     try
     {
-        var products = await repository.GetAllProducts(pageNumber, pageSize);
+        List<ProductDTO> products = await repository.GetAllProducts();
         _response.StatusCode = HttpStatusCode.OK;
         _response.Result = products;
         _response.IsSuccess = true;
