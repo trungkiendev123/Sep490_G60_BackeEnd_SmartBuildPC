@@ -85,11 +85,17 @@ public async Task<List<ProductDTO>> GetProductByGroup(string name)
 
 
 
-public async Task<List<ProductDTO>> GetAllProducts()
+public async Task<List<ProductDTO>> GetAllProducts(int pageNumber = 1, int pageSize = 50)
 {
     try
     {
-        var products = await _context.Products
+        var query = _context.Products.AsQueryable();
+
+        var totalItems = await query.CountAsync();
+
+        var products = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .Select(n => new ProductDTO
             {
                 ProductId = n.ProductId,
@@ -98,9 +104,12 @@ public async Task<List<ProductDTO>> GetAllProducts()
                 Description = n.Description,
                 Price = n.Price,
                 Warranty = n.Warranty,
-                Brand = n.Brand
+                Brand = n.Brand,
+                Tag = n.Tag,
+                TDP = (int)n.Tdp
             })
             .ToListAsync();
+
         return products;
     }
     catch (Exception ex)
