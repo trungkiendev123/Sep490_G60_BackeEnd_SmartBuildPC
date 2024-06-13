@@ -68,26 +68,26 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
         }
 
         [HttpGet("GetAllProducts")]
-[ProducesResponseType(StatusCodes.Status200OK)]
-[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-public async Task<ActionResult<ApiResponse>> GetAllProducts()
-{
-    var _response = new ApiResponse();
-    try
-    {
-        List<ProductDTO> products = await repository.GetAllProducts();
-        _response.StatusCode = HttpStatusCode.OK;
-        _response.Result = products;
-        _response.IsSuccess = true;
-        return Ok(_response);
-    }
-    catch (Exception ex)
-    {
-        _response.IsSuccess = false;
-        _response.ErrorMessages = new List<string> { ex.Message };
-        return StatusCode(StatusCodes.Status500InternalServerError, _response);
-    }
-}
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<ApiResponse>> GetAllProducts()
+        {
+            var _response = new ApiResponse();
+            try
+            {
+                List<ProductDTO> products = await repository.GetAllProducts();
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.Result = products;
+                _response.IsSuccess = true;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.Message };
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+        }
 
 
 
@@ -135,4 +135,4 @@ public async Task<ActionResult<ApiResponse>> GetAllProducts()
             }
         }
     }
-    }
+}
