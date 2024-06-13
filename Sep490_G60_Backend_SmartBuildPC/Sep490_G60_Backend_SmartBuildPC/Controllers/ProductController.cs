@@ -1,3 +1,4 @@
+
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Sep490_G60_Backend_SmartBuildPC.DTOs;
@@ -67,28 +68,28 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
 
         }
 
-        [HttpGet("GetAllProducts")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<ApiResponse>> GetAllProducts()
-        {
-            var _response = new ApiResponse();
-            try
-            {
-                List<ProductDTO> products = await repository.GetAllProducts();
-                _response.StatusCode = HttpStatusCode.OK;
-                _response.Result = products;
-                _response.IsSuccess = true;
-                return Ok(_response);
-            }
-            catch (Exception ex)
-            {
-                _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.Message };
-                return StatusCode(StatusCodes.Status500InternalServerError, _response);
-            }
-        }
 
+[HttpGet("GetAllProducts")]
+[ProducesResponseType(StatusCodes.Status200OK)]
+[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+public async Task<ActionResult<ApiResponse>> GetAllProducts(int pageNumber = 1, int pageSize = 50)
+{
+    var _response = new ApiResponse();
+    try
+    {
+        var products = await repository.GetAllProducts(pageNumber, pageSize);
+        _response.StatusCode = HttpStatusCode.OK;
+        _response.Result = products;
+        _response.IsSuccess = true;
+        return Ok(_response);
+    }
+    catch (Exception ex)
+    {
+        _response.IsSuccess = false;
+        _response.ErrorMessages = new List<string> { ex.Message };
+        return StatusCode(StatusCodes.Status500InternalServerError, _response);
+    }
+}
 
 
 
@@ -134,5 +135,27 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
         }
+
+
+
+        [HttpGet("SearchProducts")]
+public async Task<ActionResult<ApiResponse>> GetProductsByKeyword(string keyword, int pageNumber = 1, int pageSize = 50)
+{
+    var _response = new ApiResponse();
+    try
+    {
+        List<ProductDTO> products = await repository.GetProductsByKeyword(keyword, pageNumber, pageSize);
+        _response.StatusCode = HttpStatusCode.OK;
+        _response.Result = products;
+        _response.IsSuccess = true;
+        return Ok(_response);
+    }
+    catch (Exception ex)
+    {
+        _response.IsSuccess = false;
+        _response.ErrorMessages = new List<string> { ex.Message };
+        return StatusCode(StatusCodes.Status500InternalServerError, _response);
     }
 }
+    }
+    }
