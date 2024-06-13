@@ -134,5 +134,24 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
         }
+        [HttpGet("PreviewProduct")]
+        public async Task<ActionResult<ApiResponse>> PreviewProduct(int productID)
+        {
+            var _response = new ApiResponse();
+            try
+            {
+                PreviewProductDTO preview = await repository.PreviewProduct(productID);
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.Result = preview;
+                _response.IsSuccess = true;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.Message };
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+        }
     }
 }
