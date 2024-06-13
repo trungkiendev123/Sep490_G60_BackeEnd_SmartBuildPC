@@ -144,7 +144,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
         {
             try
             {
-                var product = await _context.Products.FirstOrDefaultAsync(x => x.ProductId == id);
+                var product = await _context.Products.Include(x => x.ProductStores).ThenInclude(y => y.Store).FirstOrDefaultAsync(x => x.ProductId == id);
                 List<StoreDTO> stores = new();
                 var products_stores = product.ProductStores;
                 foreach (ProductStore ps in products_stores)

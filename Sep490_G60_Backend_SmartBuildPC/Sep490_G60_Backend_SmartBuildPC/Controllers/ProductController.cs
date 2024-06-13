@@ -125,12 +125,14 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.Result = products;
                 _response.IsSuccess = true;
+                _response.Message = "Get data successfully";
                 return Ok(_response);
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.ErrorMessages = new List<string> { ex.Message };
+                _response.Message = "Get data fail";
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
         }
@@ -144,12 +146,14 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.Result = preview;
                 _response.IsSuccess = true;
+                _response.Message = "Get data successfully";
                 return Ok(_response);
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.ErrorMessages = new List<string> { ex.Message };
+                _response.Message = "Get data fail";
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
         }
