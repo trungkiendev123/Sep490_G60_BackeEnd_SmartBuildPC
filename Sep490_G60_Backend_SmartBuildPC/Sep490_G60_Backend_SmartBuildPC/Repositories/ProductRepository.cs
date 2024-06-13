@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sep490_G60_Backend_SmartBuildPC.DTOs;
 using Sep490_G60_Backend_SmartBuildPC.Models;
+using Sep490_G60_Backend_SmartBuildPC.Responses;
+using System.Collections;
 using System.Xml.Linq;
 
 namespace Sep490_G60_Backend_SmartBuildPC.Repositories
@@ -18,69 +20,71 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
         {
             try
             {
-                var list = await _context.Products.Include(x => x.Category).Where(x => x.ProductId == id).Select(n => new ProductDTO { ProductId = n.ProductId,CategoryName = n.Category.CategoryName , ProductName = n.ProductName , Price = n.Price ,Description = n.Description ,Warranty = n.Warranty , Brand = n.Brand }).SingleAsync() ;
+
+                var list = await _context.Products.Include(x => x.Category).Where(x => x.ProductId == id).Select(n => new ProductDTO { ProductId = n.ProductId, CategoryName = n.Category.CategoryName, ProductName = n.ProductName, Price = n.Price, Description = n.Description, Warranty = n.Warranty, Brand = n.Brand }).SingleAsync();
+
                 return list;
-                //return list;
             }
             catch (Exception ex)
             {
-                
+
                 throw new Exception("An error occurred while getting the product.", ex);
             }
         }
 
 
         public async Task<List<ProductDTO>> GetProductByBrand(string brandName)
-{
-    try
-    {
-        var products = await _context.Products
-            .Where(x => x.Brand == brandName)
-            .Select(n => new ProductDTO
+        {
+            try
             {
-                ProductId = n.ProductId,
-                ProductName = n.ProductName
-            })
-            .ToListAsync();
+                var products = await _context.Products
+                    .Where(x => x.Brand == brandName)
+                    .Select(n => new ProductDTO
+                    {
+                        ProductId = n.ProductId,
+                        ProductName = n.ProductName
+                    })
+                    .ToListAsync();
 
-        return products;
-    }
-    catch (Exception ex)
-    {
-        throw new Exception("An error occurred while getting the products by brand.", ex);
-    }
-}
+                return products;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while getting the products by brand.", ex);
+            }
+        }
 
 
 
 
 
-public async Task<List<ProductDTO>> GetProductByGroup(string name)
-{
-    try
-    {
-        var products = await (from g in _context.Groups
-                              join pb in _context.PcbuildParts on g.PcbuildId equals pb.PcbuildId
-                              join p in _context.Products on pb.PartId equals p.ProductId
-                              where g.Pctype == name
-                              select new ProductDTO
-                              {
-                                  ProductId = p.ProductId,
+        public async Task<List<ProductDTO>> GetProductByGroup(string name)
+        {
+            try
+            {
+                var products = await (from g in _context.Groups
+                                      join pb in _context.PcbuildParts on g.PcbuildId equals pb.PcbuildId
+                                      join p in _context.Products on pb.PartId equals p.ProductId
+                                      where g.Pctype == name
+                                      select new ProductDTO
+                                      {
+                                          ProductId = p.ProductId,
 
-                                  ProductName = p.ProductName,
-                                  Description = p.Description,
-                                  Price = p.Price,
-                                  Warranty = p.Warranty,
-                                  Brand = p.Brand
-                              }).ToListAsync();
+                                          ProductName = p.ProductName,
+                                          Description = p.Description,
+                                          Price = p.Price,
+                                          Warranty = p.Warranty,
+                                          Brand = p.Brand
+                                      }).ToListAsync();
 
-        return products;
-    }
-    catch (Exception ex)
-    {
-        throw new Exception("An error occurred while getting the products by group.", ex);
-    }
-}
+                return products;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while getting the products by group.", ex);
+            }
+        }
+
 
 
 
@@ -118,9 +122,10 @@ public async Task<List<ProductDTO>> GetAllProducts(int pageNumber = 1, int pageS
     }
 }
 
-
-
         
+
+
+
 
 
         public async Task<IEnumerable<ProductDTO>> GetProductsByCategory(int categoryID)
@@ -145,6 +150,7 @@ public async Task<List<ProductDTO>> GetAllProducts(int pageNumber = 1, int pageS
                 throw new Exception("An error occurred while getting the products by group.", ex);
             }
         }
+
 
 
 
