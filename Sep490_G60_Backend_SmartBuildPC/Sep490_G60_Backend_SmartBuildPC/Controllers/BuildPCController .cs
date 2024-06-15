@@ -38,5 +38,26 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
         }
+        [HttpGet("categories/filter/{cate_id}")]
+        public async Task<ActionResult<ApiResponse>> GetFilter(int cate_id)
+        {
+            IEnumerable<FilterDTO> list = await _repository.getFilterOfCategory(cate_id);
+            var _response = new ApiResponse();
+            try
+            {
+
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.Result = list;
+                _response.IsSuccess = true;
+                _response.Message = "List successfully";
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = "List fail";
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+        }
     }
 }

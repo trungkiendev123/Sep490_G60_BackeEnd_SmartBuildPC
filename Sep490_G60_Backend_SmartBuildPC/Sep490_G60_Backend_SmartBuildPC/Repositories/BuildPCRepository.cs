@@ -12,7 +12,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
             _context = context;
         }
 
-        public async Task<List<FilterDTO>> getFilterOfCategory(int cate_id)
+        public async Task<IEnumerable<FilterDTO>> getFilterOfCategory(int cate_id)
         {
             try
             {
