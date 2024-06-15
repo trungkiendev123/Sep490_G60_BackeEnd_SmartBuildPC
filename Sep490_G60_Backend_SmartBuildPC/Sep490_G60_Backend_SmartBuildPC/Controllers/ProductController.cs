@@ -10,7 +10,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+        public class ProductController : ControllerBase
     {
         private readonly IProductRepository repository;
         public ProductController(IProductRepository _repository)
@@ -139,23 +139,27 @@ public async Task<ActionResult<ApiResponse>> GetAllProducts(int pageNumber = 1, 
 
 
         [HttpGet("SearchProducts")]
-public async Task<ActionResult<ApiResponse>> GetProductsByKeyword(string keyword, int pageNumber = 1, int pageSize = 50)
-{
-    var _response = new ApiResponse();
-    try
-    {
-        List<ProductDTO> products = await repository.GetProductsByKeyword(keyword, pageNumber, pageSize);
-        _response.StatusCode = HttpStatusCode.OK;
-        _response.Result = products;
-        _response.IsSuccess = true;
-        return Ok(_response);
-    }
-    catch (Exception ex)
-    {
-        _response.IsSuccess = false;
-        _response.ErrorMessages = new List<string> { ex.Message };
-        return StatusCode(StatusCodes.Status500InternalServerError, _response);
-    }
-}
+        public async Task<ActionResult<ApiResponse>> GetProductsByKeyword(string keyword, int pageNumber = 1, int pageSize = 50)
+        {
+            var _response = new ApiResponse();
+            try
+            {
+                List<ProductDTO> products = await repository.GetProductsByKeyword(keyword, pageNumber, pageSize);
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.Result = products;
+                _response.IsSuccess = true;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.Message };
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+        }
+
+
+
+
     }
     }
