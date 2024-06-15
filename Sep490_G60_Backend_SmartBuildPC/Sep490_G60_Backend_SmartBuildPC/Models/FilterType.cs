@@ -3,18 +3,16 @@ using System.Collections.Generic;
 
 namespace Sep490_G60_Backend_SmartBuildPC.Models
 {
-    public partial class Category
+    public partial class FilterType
     {
-        public Category()
+        public FilterType()
         {
             FilterTypeCategories = new HashSet<FilterTypeCategory>();
-            Products = new HashSet<Product>();
         }
 
-        public int CategoryId { get; set; }
-        public string CategoryName { get; set; } = null!;
+        public int FilterTypeId { get; set; }
+        public string? FilterType1 { get; set; }
 
         public virtual ICollection<FilterTypeCategory> FilterTypeCategories { get; set; }
-        public virtual ICollection<Product> Products { get; set; }
     }
 }

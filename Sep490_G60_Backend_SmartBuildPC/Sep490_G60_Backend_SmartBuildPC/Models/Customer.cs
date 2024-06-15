@@ -13,12 +13,12 @@ namespace Sep490_G60_Backend_SmartBuildPC.Models
         }
 
         public int CustomerId { get; set; }
-        public int AccountId { get; set; }
+        public string AccountId { get; set; } = null!;
         public string Phone { get; set; } = null!;
         public string FullName { get; set; } = null!;
         public string Address { get; set; } = null!;
 
-        public virtual Account? Account { get; set; }
+        public virtual Account Account { get; set; } = null!;
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Pcbuild> Pcbuilds { get; set; }

@@ -5,13 +5,19 @@ namespace Sep490_G60_Backend_SmartBuildPC.Models
 {
     public partial class Account
     {
-        public int AccountId { get; set; }
+        public Account()
+        {
+            Customers = new HashSet<Customer>();
+            staff = new HashSet<staff>();
+        }
+
+        public string AccountId { get; set; } = null!;
         public string Username { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;
         public string AccountType { get; set; } = null!;
 
-        public virtual staff Account1 { get; set; } = null!;
-        public virtual Customer AccountNavigation { get; set; } = null!;
+        public virtual ICollection<Customer> Customers { get; set; }
+        public virtual ICollection<staff> staff { get; set; }
     }
 }

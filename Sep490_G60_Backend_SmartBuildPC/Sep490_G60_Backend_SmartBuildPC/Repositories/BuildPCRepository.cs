@@ -11,6 +11,49 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
         {
             _context = context;
         }
+
+        public async Task<List<FilterDTO>> getFilterOfCategory(int cate_id)
+        {
+            try
+            {
+                var filter_categories = await _context.FilterTypeCategories.Include(X => X.FilterType).Where(x => x.CategoryId == cate_id).ToListAsync();
+                List<FilterDTO> dtos = new List<FilterDTO>();
+                foreach (var item in filter_categories)
+                {
+                    FilterDTO dto = new FilterDTO();
+                    dto.FilterName = item.FilterType.FilterType1;
+                    List<string> values = new List<string>();
+                    if (dto.FilterName.Contains("Brand"))
+                    {
+                        var products = await _context.Products.Where(x => x.CategoryId == cate_id).ToListAsync();
+                        var brands = products.Select(x => x.Brand).Distinct().ToList();
+                        foreach(var brand in brands)
+                        {
+                            values.Add(brand);
+                        }
+                    }
+                    else
+                    {
+                        var FilterStrings = await _context.FilterStrings.Where(X => X.FilterTypeCategoryId == item.FilterTypeCategoryId).ToListAsync();
+                        foreach(var fValue in FilterStrings)
+                        {
+                            values.Add(fValue.FilterString1);
+                        }
+                    }
+                    dto.FilterValue = values;
+                    dtos.Add(dto);
+
+                }
+                return dtos;
+
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while do this action", ex);
+            }
+        }
+
         public async Task<IEnumerable<CategoryDTO>> listCategory()
         {
             try
