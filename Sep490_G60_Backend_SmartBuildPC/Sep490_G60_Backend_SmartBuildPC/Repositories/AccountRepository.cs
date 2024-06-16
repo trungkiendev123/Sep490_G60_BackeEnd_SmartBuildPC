@@ -48,6 +48,21 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
                 throw new Exception("An error occurred while do this action", ex);
             }
         }
+        public void ChangeStatusAccount(int status, int id)
+        {
+            try
+            {
+                var account = _context.Accounts.FirstOrDefault(x => x.AccountId.Equals(id));
+                account.Status = status;
+                _context.Accounts.Update(account);
+                _context.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while do this action", ex);
+            }
+        }
 
         public async Task<Account> GetAccount(string email, string password)
         {
