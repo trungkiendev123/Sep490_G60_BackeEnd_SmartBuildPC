@@ -13,6 +13,33 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
         {
             _context = context;
         }
+
+        public async Task<Account> GetAccount(string email, string password)
+        {
+            try
+            {
+                return await _context.Accounts.FirstOrDefaultAsync(x => x.Email.Equals(email) && DecryptPassword.ComputeMD5Hash(x.Password).Equals(password));
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public Task<Account> GetAccountByEmail(string email)
+        {
+            try
+            {
+                return await _context.Accounts.FirstOrDefaultAsync(x => x.Email.Equals(email));
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public void register(RegisterFormRequest request)
         {
             try
