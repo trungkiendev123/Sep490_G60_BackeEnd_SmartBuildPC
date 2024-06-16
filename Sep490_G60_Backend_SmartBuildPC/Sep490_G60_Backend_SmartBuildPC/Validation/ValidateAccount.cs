@@ -14,7 +14,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Validation
         {
             _context = context;
         }
-        public static bool IsValidEmail(string email)
+        public bool IsValidEmail(string email)
         {
             if (string.IsNullOrEmpty(email))
             {

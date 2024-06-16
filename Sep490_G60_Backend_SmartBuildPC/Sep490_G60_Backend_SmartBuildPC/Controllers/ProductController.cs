@@ -36,6 +36,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
             }
             catch (Exception ex)
             {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
                 _response.ErrorMessages = new List<string> { ex.Message };
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
@@ -60,6 +61,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
             }
             catch (Exception ex)
             {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
                 _response.ErrorMessages = new List<string> { ex.Message };
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
@@ -83,6 +85,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
             }
             catch (Exception ex)
             {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
                 _response.ErrorMessages = new List<string> { ex.Message };
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
@@ -109,6 +112,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
             }
             catch (Exception ex)
             {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
                 _response.ErrorMessages = new List<string> { ex.Message };
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
@@ -130,6 +134,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
             }
             catch (Exception ex)
             {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
                 _response.ErrorMessages = new List<string> { ex.Message };
                 _response.Message = "Get data fail";
@@ -151,6 +156,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
             }
             catch (Exception ex)
             {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
                 _response.ErrorMessages = new List<string> { ex.Message };
                 _response.Message = "Get data fail";
