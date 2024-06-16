@@ -17,6 +17,8 @@ namespace Sep490_G60_Backend_SmartBuildPC.Models
         public string Password { get; set; } = null!;
         public string AccountType { get; set; } = null!;
         public int? Status { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTime? Expired { get; set; }
 
         public virtual ICollection<Customer> Customers { get; set; }
         public virtual ICollection<staff> staff { get; set; }

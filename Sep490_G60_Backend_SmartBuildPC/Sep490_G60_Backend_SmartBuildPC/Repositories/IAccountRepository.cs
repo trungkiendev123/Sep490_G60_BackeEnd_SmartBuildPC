@@ -10,5 +10,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
         public Task<Account> GetAccount(string email,string password);
 
         public Task<Account> GetAccountByEmail(string email);
+
+        public void Update(Account account);
     }
 }

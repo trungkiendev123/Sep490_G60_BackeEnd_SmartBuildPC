@@ -4,6 +4,7 @@ using Sep490_G60_Backend_SmartBuildPC.Models;
 using Sep490_G60_Backend_SmartBuildPC.Repositories;
 using Sep490_G60_Backend_SmartBuildPC.Requests;
 using Sep490_G60_Backend_SmartBuildPC.Responses;
+using Sep490_G60_Backend_SmartBuildPC.Service;
 using Sep490_G60_Backend_SmartBuildPC.Validation;
 using System.Net;
 
@@ -14,21 +15,23 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountRepository _repository;
-        private readonly SMARTPCContext _context;
+        private readonly ValidateAccount _validate;
+        private readonly TokenGenerate _token;
 
-        public AccountController(IAccountRepository repository, SMARTPCContext context)
+        public AccountController(IAccountRepository repository, ValidateAccount validate, TokenGenerate token)
         {
             _repository = repository;
-            _context = context;
+            _validate = validate;
+            _token = token;
         }
         [HttpPost("register")]
         public async Task<ActionResult<ApiResponse>> Register(RegisterFormRequest request)
         {
             var _response = new ApiResponse();
-            List<string> errors = new ValidateAccount(_context).validateAccount(request);
+            List<string> errors = _validate.validateAccount(request);
             try
             {
-                if(errors.Count > 0)
+                if (errors.Count > 0)
                 {
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     _response.IsSuccess = false;
@@ -54,7 +57,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(LoginFormRequest request)
+        public async Task<IActionResult> Login(LoginFormRequest request)
         {
             if (_repository.GetAccountByEmail(request.email) == null)
             {
@@ -68,7 +71,8 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
                         }
                     );
             }
-            if (_repository.GetAccount(request.email, request.password) == null)
+            Account account = await _repository.GetAccount(request.email, request.password);
+            if (account == null)
             {
                 return NotFound(
                         new ApiResponse
@@ -82,21 +86,28 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
             }
             else
             {
-                var user = _authenticationRepository.checkLoginEmployee(userRequest, false).Item2;
-                var accessToken = _manageToken.generateToken(userRequest, false);
-                var refreshToken = _manageToken.GenerateRefreshToken();
-                var tokenInformation = new TokenModel
+                if (account.Status != 1)
+                {
+                    return Unauthorized(
+                        new ApiResponse
+                        {
+                            StatusCode = HttpStatusCode.NotFound,
+                            IsSuccess = false,
+                            Message = "Your account has been banned",
+                            ErrorMessages = new List<string> { "Your account has been banned" }
+                        }
+                    );
+                }
+                var accessToken = await _token.generateToken(request);
+                var refreshToken = await _token.GenerateRefreshToken();
+                var tokenInformation = new TokenRefresh
                 {
                     AccessToken = accessToken,
                     RefreshToken = refreshToken
                 };
-                user.RefreshToken = refreshToken;
-                user.RefreshTokenExpired = DateTime.Now.AddDays(7);
-                _accountRepository.UpdateEmployee(user);
-                if (user.Status == 0)
-                {
-                    _employeeRepository.ActivateEmployee(user.Id.ToString());
-                }
+                account.RefreshToken = refreshToken;
+                account.Expired = DateTime.Now.AddDays(7);
+                _repository.Update(account);
                 return Ok(
                     new ApiResponse
                     {

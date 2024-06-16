@@ -5,6 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Sep490_G60_Backend_SmartBuildPC.Models;
 using Sep490_G60_Backend_SmartBuildPC.Repositories;
+using Sep490_G60_Backend_SmartBuildPC.Service;
+using Sep490_G60_Backend_SmartBuildPC.Validation;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -14,6 +16,8 @@ var secretKey = builder.Configuration["Config:SecretKey"];
 var secretKeyEncrypt = Encoding.UTF8.GetBytes(secretKey);
 // Add services to the container.
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<TokenGenerate>();
+builder.Services.AddScoped<ValidateAccount>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -69,9 +69,15 @@ namespace Sep490_G60_Backend_SmartBuildPC.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Expired)
+                    .HasColumnType("datetime")
+                    .HasColumnName("expired");
+
                 entity.Property(e => e.Password)
                     .HasMaxLength(255)
                     .IsUnicode(false);
+
+                entity.Property(e => e.RefreshToken).HasColumnType("text");
 
                 entity.Property(e => e.Status).HasColumnName("status");
 

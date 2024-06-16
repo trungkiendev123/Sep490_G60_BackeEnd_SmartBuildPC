@@ -73,5 +73,24 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
                 throw new Exception("An error occurred while do this action", ex);
             }
         }
+
+        public async void Update(Account account)
+        {
+
+                try
+                {
+                    if (account == null)
+                    {
+                        return;
+                    }
+                    _context.Accounts.Update(account);
+                    _context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+
+        }
     }
 }
