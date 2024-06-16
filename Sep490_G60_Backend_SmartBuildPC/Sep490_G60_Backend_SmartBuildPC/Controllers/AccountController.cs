@@ -197,5 +197,40 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
             }
 
         }
+        [HttpPut("ChangeStatus")]
+        public async Task<ActionResult<ApiResponse>> ChangeStatus(ChangeStatusRequest request)
+        {
+            var _response = new ApiResponse();
+            List<string> errors = _validate.validateChangeStatus(request);
+            try
+            {
+                if (errors.Count > 0)
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = false;
+                    _response.Message = "Change status account fail";
+                    _response.ErrorMessages = errors;
+                }
+                else
+                {
+                    _repository.ChangeStatusAccount(request.status,request.AccountID);
+                    _response.StatusCode = HttpStatusCode.OK;
+                    _response.IsSuccess = true;
+                    _response.Message = "Change status account success";
+                }
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    IsSuccess = false,
+                    Message = "Change status account fail",
+                    ErrorMessages = new List<string> { "Something error from the server" }
+                };
+            }
+
+        }
     }
 }

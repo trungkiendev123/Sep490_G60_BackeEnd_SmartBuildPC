@@ -174,5 +174,23 @@ namespace Sep490_G60_Backend_SmartBuildPC.Validation
             }
             return errors;
         }
+        public List<string> validateChangeStatus(ChangeStatusRequest request)
+        {
+            List<string> errors = new List<string>();
+            try
+            {
+                var ids = _context.Accounts.ToList().Select(x => x.AccountId.ToString());
+                if (!ids.Contains(request.AccountID))
+                {
+                    errors.Add("AccountID is not exist");
+                }
+
+            }
+            catch (Exception e)
+            {
+                errors.Add(e.Message);
+            }
+            return errors;
+        }
     }
 }

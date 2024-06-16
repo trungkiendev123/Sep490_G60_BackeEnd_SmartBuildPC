@@ -14,5 +14,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
         public void Update(Account account);
 
         public void AddAccount(AddAccountRequest account);
+
+        public void ChangeStatusAccount(int status,string id);
     }
 }

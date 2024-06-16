@@ -48,7 +48,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
                 throw new Exception("An error occurred while do this action", ex);
             }
         }
-        public void ChangeStatusAccount(int status, int id)
+        public void ChangeStatusAccount(int status, string id)
         {
             try
             {
