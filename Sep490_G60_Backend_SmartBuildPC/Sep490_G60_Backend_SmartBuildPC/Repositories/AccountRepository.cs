@@ -27,6 +27,16 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
                 };
                 _context.Accounts.Add(account);
                 _context.SaveChanges();
+                Customer customer = new Customer()
+                {
+                    CustomerId = Guid.NewGuid(),
+                    AccountId = account.AccountId,
+                    Address = request.Address,
+                    FullName = request.FullName,
+                    Phone = request.Phone
+                };
+                _context.Customers.Add(customer);
+                _context.SaveChanges();
 
 
             }
