@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\Sep490_G60_Backend_SmartBuildPC.props" />
-</Project>
