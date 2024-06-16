@@ -73,6 +73,8 @@ namespace Sep490_G60_Backend_SmartBuildPC.Models
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Status).HasColumnName("status");
+
                 entity.Property(e => e.Username)
                     .HasMaxLength(255)
                     .IsUnicode(false);

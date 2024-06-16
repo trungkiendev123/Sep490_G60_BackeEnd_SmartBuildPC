@@ -16,6 +16,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Models
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;
         public string AccountType { get; set; } = null!;
+        public int? Status { get; set; }
 
         public virtual ICollection<Customer> Customers { get; set; }
         public virtual ICollection<staff> staff { get; set; }

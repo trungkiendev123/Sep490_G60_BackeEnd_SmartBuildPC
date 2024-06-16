@@ -27,7 +27,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
             }
         }
 
-        public Task<Account> GetAccountByEmail(string email)
+        public async Task<Account> GetAccountByEmail(string email)
         {
             try
             {
@@ -50,7 +50,8 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
                     Password = DecryptPassword.ComputeMD5Hash(request.Password),
                     Username = request.Username,
                     Email = request.Email,
-                    AccountType = "CUSTOMER"
+                    AccountType = "CUSTOMER",
+                    Status = 1
                 };
                 _context.Accounts.Add(account);
                 _context.SaveChanges();

@@ -52,5 +52,62 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
         }
+
+        [HttpPost("login")]
+        public IActionResult Login(LoginFormRequest request)
+        {
+            if (_repository.GetAccountByEmail(request.email) == null)
+            {
+                return NotFound(
+                        new ApiResponse
+                        {
+                            StatusCode = HttpStatusCode.NotFound,
+                            IsSuccess = false,
+                            Message = "Wrong email",
+                            ErrorMessages = new List<string> { "Email not exist in the system" }
+                        }
+                    );
+            }
+            if (_repository.GetAccount(request.email, request.password) == null)
+            {
+                return NotFound(
+                        new ApiResponse
+                        {
+                            StatusCode = HttpStatusCode.NotFound,
+                            IsSuccess = false,
+                            Message = "Wrong password",
+                            ErrorMessages = new List<string> { "Password for this email is wrong" }
+                        }
+                    );
+            }
+            else
+            {
+                var user = _authenticationRepository.checkLoginEmployee(userRequest, false).Item2;
+                var accessToken = _manageToken.generateToken(userRequest, false);
+                var refreshToken = _manageToken.GenerateRefreshToken();
+                var tokenInformation = new TokenModel
+                {
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken
+                };
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenExpired = DateTime.Now.AddDays(7);
+                _accountRepository.UpdateEmployee(user);
+                if (user.Status == 0)
+                {
+                    _employeeRepository.ActivateEmployee(user.Id.ToString());
+                }
+                return Ok(
+                    new ApiResponse
+                    {
+                        //StatusCode = HttpStatusCode.OK,
+                        IsSuccess = true,
+                        Message = "Login successfully",
+                        TokenInformation = tokenInformation
+                    }
+                    ); ;
+            }
+
+        }
     }
 }
