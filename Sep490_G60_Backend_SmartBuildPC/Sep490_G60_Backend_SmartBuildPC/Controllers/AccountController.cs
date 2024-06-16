@@ -161,5 +161,41 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
             }
             
         }
+
+        [HttpPost("AddAccount")]
+        public async Task<ActionResult<ApiResponse>> AddAccount(AddAccountRequest request)
+        {
+            var _response = new ApiResponse();
+            List<string> errors = _validate.validateAddAccount(request);
+            try
+            {
+                if (errors.Count > 0)
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = false;
+                    _response.Message = "Add account fail";
+                    _response.ErrorMessages = errors;
+                }
+                else
+                {
+                    _repository.AddAccount(request);
+                    _response.StatusCode = HttpStatusCode.Created;
+                    _response.IsSuccess = true;
+                    _response.Message = "Add account success";
+                }
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    IsSuccess = false,
+                    Message = "Add account fail",
+                    ErrorMessages = new List<string> { "Something error from the server" }
+                };
+            }
+
+        }
     }
 }

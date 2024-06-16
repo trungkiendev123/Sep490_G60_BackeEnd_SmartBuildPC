@@ -14,6 +14,41 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
             _context = context;
         }
 
+        public void AddAccount(AddAccountRequest request)
+        {
+            try
+            {
+                Account account = new Account()
+                {
+                    AccountId = Guid.NewGuid(),
+                    Password = DecryptPassword.ComputeMD5Hash(request.Password),
+                    Username = request.Username,
+                    Email = request.Email,
+                    AccountType = request.AccounType,
+                    Status = 1
+                };
+                _context.Accounts.Add(account);
+                _context.SaveChanges();
+                if (account.AccountType.Equals("STAFF"))
+                {
+                    staff newStaff = new staff()
+                    {
+                        StaffId = Guid.NewGuid(),
+                        AccountId = account.AccountId,
+                        StoreId = (int)request.StoreID,
+                        FullName = request.FullName
+                    };
+                    _context.staff.Add(newStaff);
+                    _context.SaveChanges();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while do this action", ex);
+            }
+        }
+
         public async Task<Account> GetAccount(string email, string password)
         {
             try
