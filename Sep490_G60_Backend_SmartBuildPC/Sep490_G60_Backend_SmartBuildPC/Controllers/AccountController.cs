@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Sep490_G60_Backend_SmartBuildPC.Models;
 using Sep490_G60_Backend_SmartBuildPC.Repositories;
@@ -57,68 +58,108 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginFormRequest request)
+        public async Task<ActionResult<ApiResponse>> Login(LoginFormRequest request)
         {
-            if (_repository.GetAccountByEmail(request.email) == null)
+            try
             {
-                return NotFound(
-                        new ApiResponse
-                        {
-                            StatusCode = HttpStatusCode.NotFound,
-                            IsSuccess = false,
-                            Message = "Wrong email",
-                            ErrorMessages = new List<string> { "Email not exist in the system" }
-                        }
-                    );
-            }
-            Account account = await _repository.GetAccount(request.email, request.password);
-            if (account == null)
-            {
-                return NotFound(
-                        new ApiResponse
-                        {
-                            StatusCode = HttpStatusCode.NotFound,
-                            IsSuccess = false,
-                            Message = "Wrong password",
-                            ErrorMessages = new List<string> { "Password for this email is wrong" }
-                        }
-                    );
-            }
-            else
-            {
-                if (account.Status != 1)
+                if (_repository.GetAccountByEmail(request.email) == null)
                 {
-                    return Unauthorized(
-                        new ApiResponse
+                    return new ApiResponse
+                    {
+                        StatusCode = HttpStatusCode.NotFound,
+                        IsSuccess = false,
+                        Message = "Wrong email",
+                        ErrorMessages = new List<string> { "Email not exist in the system" }
+                    };
+                }
+                Account account = await _repository.GetAccount(request.email, request.password);
+                if (account == null)
+                {
+                    return new ApiResponse
+                    {
+                        StatusCode = HttpStatusCode.NotFound,
+                        IsSuccess = false,
+                        Message = "Wrong password",
+                        ErrorMessages = new List<string> { "Password for this email is wrong" }
+                    };
+
+                }
+                else
+                {
+                    if (account.Status != 1)
+                    {
+                        return new ApiResponse
                         {
                             StatusCode = HttpStatusCode.NotFound,
                             IsSuccess = false,
                             Message = "Your account has been banned",
                             ErrorMessages = new List<string> { "Your account has been banned" }
-                        }
-                    );
-                }
-                var accessToken = await _token.generateToken(request);
-                var refreshToken = await _token.GenerateRefreshToken();
-                var tokenInformation = new TokenRefresh
-                {
-                    AccessToken = accessToken,
-                    RefreshToken = refreshToken
-                };
-                account.RefreshToken = refreshToken;
-                account.Expired = DateTime.Now.AddDays(7);
-                _repository.Update(account);
-                return Ok(
-                    new ApiResponse
+                        };
+                    }
+                    var accessToken = await _token.generateToken(request);
+                    var refreshToken = await _token.GenerateRefreshToken();
+                    var tokenInformation = new TokenRefresh
                     {
-                        //StatusCode = HttpStatusCode.OK,
+                        AccessToken = accessToken,
+                        RefreshToken = refreshToken
+                    };
+                    account.RefreshToken = refreshToken;
+                    account.Expired = DateTime.Now.AddDays(7);
+                    _repository.Update(account);
+                    return new ApiResponse
+                    {
+                        StatusCode = HttpStatusCode.OK,
                         IsSuccess = true,
                         Message = "Login successfully",
                         TokenInformation = tokenInformation
-                    }
-                    ); ;
+                    };
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    IsSuccess = false,
+                    Message = "Login fail",
+                    ErrorMessages = new List<string> { "Something error from the server" }
+                };
+
             }
 
+
+
+        }
+
+        [HttpPost("logout")]
+        public async Task<ActionResult<ApiResponse>> Logout()
+        {
+            try
+            {
+                var email = User.Identity.Name;
+                var user = await _repository.GetAccountByEmail(email);
+                if (user == null) return BadRequest();
+                user.RefreshToken = null;
+                _repository.Update(user);
+                return new ApiResponse
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    IsSuccess = true,
+                    Message = "Logout successfully"
+                };
+            }
+            catch(Exception ex)
+            {
+                return new ApiResponse
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    IsSuccess = false,
+                    Message = "Logout fail",
+                    ErrorMessages = new List<string> { "Something error from the server" }
+                };
+            }
+            
         }
     }
 }

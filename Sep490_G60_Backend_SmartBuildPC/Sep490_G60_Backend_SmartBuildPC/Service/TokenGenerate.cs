@@ -37,7 +37,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Service
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim("ID",Id),
-                    new Claim(ClaimTypes.Email,Email),
+                    new Claim(ClaimTypes.Name,Email),
                     new Claim("TokenId",Guid.NewGuid().ToString()),
                     new Claim(ClaimTypes.Role, Role)
                 }),
