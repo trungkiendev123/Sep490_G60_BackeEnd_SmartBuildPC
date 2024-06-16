@@ -64,7 +64,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
             {
                 var products = await (from g in _context.Groups
                                       join pb in _context.PcbuildParts on g.PcbuildId equals pb.PcbuildId
-                                      join p in _context.Products on pb.PartId equals p.ProductId
+                                      join p in _context.Products on pb.Product.ProductId equals p.ProductId
                                       where g.Pctype == name
                                       select new ProductDTO
                                       {

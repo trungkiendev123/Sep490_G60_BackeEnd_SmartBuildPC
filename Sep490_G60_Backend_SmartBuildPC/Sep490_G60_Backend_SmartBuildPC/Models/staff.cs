@@ -10,8 +10,8 @@ namespace Sep490_G60_Backend_SmartBuildPC.Models
             Comments = new HashSet<Comment>();
         }
 
-        public int StaffId { get; set; }
-        public string? AccountId { get; set; }
+        public Guid StaffId { get; set; }
+        public Guid? AccountId { get; set; }
         public int? StoreId { get; set; }
         public string FullName { get; set; } = null!;
 

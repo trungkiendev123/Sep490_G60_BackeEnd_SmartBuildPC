@@ -58,8 +58,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Models
                     .IsUnique();
 
                 entity.Property(e => e.AccountId)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
+                    .ValueGeneratedNever()
                     .HasColumnName("AccountID");
 
                 entity.Property(e => e.AccountType)
@@ -173,12 +172,11 @@ namespace Sep490_G60_Backend_SmartBuildPC.Models
                 entity.HasIndex(e => e.Phone, "UQ__Customer__5C7E359EC8E057B8")
                     .IsUnique();
 
-                entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
+                entity.Property(e => e.CustomerId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("CustomerID");
 
-                entity.Property(e => e.AccountId)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("AccountID");
+                entity.Property(e => e.AccountId).HasColumnName("AccountID");
 
                 entity.Property(e => e.FullName).HasMaxLength(100);
 
@@ -444,12 +442,11 @@ namespace Sep490_G60_Backend_SmartBuildPC.Models
             {
                 entity.ToTable("Staff");
 
-                entity.Property(e => e.StaffId).HasColumnName("StaffID");
+                entity.Property(e => e.StaffId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("StaffID");
 
-                entity.Property(e => e.AccountId)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("AccountID");
+                entity.Property(e => e.AccountId).HasColumnName("AccountID");
 
                 entity.Property(e => e.FullName).HasMaxLength(100);
 

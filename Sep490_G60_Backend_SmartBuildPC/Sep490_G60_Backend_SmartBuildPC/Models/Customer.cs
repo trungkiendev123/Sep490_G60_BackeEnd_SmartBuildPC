@@ -12,8 +12,8 @@ namespace Sep490_G60_Backend_SmartBuildPC.Models
             Pcbuilds = new HashSet<Pcbuild>();
         }
 
-        public int CustomerId { get; set; }
-        public string AccountId { get; set; } = null!;
+        public Guid CustomerId { get; set; }
+        public Guid AccountId { get; set; }
         public string Phone { get; set; } = null!;
         public string FullName { get; set; } = null!;
         public string Address { get; set; } = null!;

@@ -5,7 +5,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Models
 {
     public partial class Cart
     {
-        public int? CustomerId { get; set; }
+        public Guid? CustomerId { get; set; }
         public int? ProductId { get; set; }
         public int? Quantity { get; set; }
 

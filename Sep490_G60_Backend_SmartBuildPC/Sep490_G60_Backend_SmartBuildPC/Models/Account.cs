@@ -11,7 +11,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Models
             staff = new HashSet<staff>();
         }
 
-        public string AccountId { get; set; } = null!;
+        public Guid AccountId { get; set; }
         public string Username { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;
