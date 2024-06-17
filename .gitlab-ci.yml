@@ -10,7 +10,7 @@ deploy:
   - docker images | grep "smartpc_be" | grep -v "latest" | awk '{print $3}' | xargs docker rmi  || true        #xóa tất cả các images ngoại trừ image mới nhất
   - echo '--------------------------------------------DEPLOY------------------------------------------'
   - docker stop smartpc_be_con  || true
-  - docker run --rm -d --name smartpc_be_con -p 5260:5260 smartpc_be
+  - docker run --rm -d --name smartpc_be_con -p 7065:7065 smartpc_be
   only:
     - main
   tags:
