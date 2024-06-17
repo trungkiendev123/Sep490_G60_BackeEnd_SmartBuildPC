@@ -52,7 +52,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
         {
             try
             {
-                var account = _context.Accounts.FirstOrDefault(x => x.AccountId.Equals(id));
+                var account = _context.Accounts.FirstOrDefault(x => x.AccountId.ToString().ToLower().Equals(id.ToLower()));
                 account.Status = status;
                 _context.Accounts.Update(account);
                 _context.SaveChanges();
@@ -68,7 +68,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
         {
             try
             {
-                return await _context.Accounts.FirstOrDefaultAsync(x => x.Email.Equals(email) && DecryptPassword.ComputeMD5Hash(x.Password).Equals(password));
+                return await _context.Accounts.FirstOrDefaultAsync(x => x.Email.Equals(email) && DecryptPassword.ComputeMD5Hash(password).Equals(x.Password));
 
             }
             catch (Exception ex)

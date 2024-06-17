@@ -18,12 +18,14 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
         private readonly IAccountRepository _repository;
         private readonly ValidateAccount _validate;
         private readonly TokenGenerate _token;
+        private readonly IStoreRepository _repositoryStore;
 
-        public AccountController(IAccountRepository repository, ValidateAccount validate, TokenGenerate token)
+        public AccountController(IAccountRepository repository, ValidateAccount validate, TokenGenerate token, IStoreRepository repositoryStore)
         {
             _repository = repository;
             _validate = validate;
             _token = token;
+            _repositoryStore = repositoryStore;
         }
         [HttpPost("register")]
         public async Task<ActionResult<ApiResponse>> Register(RegisterFormRequest request)
@@ -62,7 +64,8 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
         {
             try
             {
-                if (_repository.GetAccountByEmail(request.email) == null)
+                var accountByEmail = await _repository.GetAccountByEmail(request.email);
+                if (accountByEmail == null)
                 {
                     return new ApiResponse
                     {
@@ -133,6 +136,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
         }
 
         [HttpPost("logout")]
+        [Authorize(Roles = "STAFF,CUSTOMER,ADMIN")]
         public async Task<ActionResult<ApiResponse>> Logout()
         {
             try
@@ -163,6 +167,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
         }
 
         [HttpPost("AddAccount")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse>> AddAccount(AddAccountRequest request)
         {
             var _response = new ApiResponse();
@@ -197,7 +202,43 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
             }
 
         }
+        [HttpGet("AddAccount")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<ActionResult<ApiResponse>> AddAccount()
+        {
+            var _response = new ApiResponse();
+            List<StoreDTO> stores = await _repositoryStore.ListStore();
+            try
+            {
+                if (stores.Count > 0)
+                {
+                    _response.StatusCode = HttpStatusCode.OK;
+                    _response.IsSuccess = true;
+                    _response.Result = stores;
+                    _response.Message = "List store successfully";
+                }
+                else
+                {
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    _response.IsSuccess = false;
+                    _response.Message = "List store fail";
+                }
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    IsSuccess = false,
+                    Message = "List store fail",
+                    ErrorMessages = new List<string> { "Something error from the server" }
+                };
+            }
+
+        }
         [HttpPut("ChangeStatus")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<ApiResponse>> ChangeStatus(ChangeStatusRequest request)
         {
             var _response = new ApiResponse();

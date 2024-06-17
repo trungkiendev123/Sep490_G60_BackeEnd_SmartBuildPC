@@ -16,6 +16,8 @@ var secretKey = builder.Configuration["Config:SecretKey"];
 var secretKeyEncrypt = Encoding.UTF8.GetBytes(secretKey);
 // Add services to the container.
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IStoreRepository, StoreRepository>();
 builder.Services.AddScoped<TokenGenerate>();
 builder.Services.AddScoped<ValidateAccount>();
 builder.Services.AddControllers();

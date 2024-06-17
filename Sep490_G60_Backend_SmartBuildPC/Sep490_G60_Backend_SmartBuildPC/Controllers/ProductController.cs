@@ -73,12 +73,12 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
         [HttpGet("GetAllProducts")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<ApiResponse>> GetAllProducts()
+        public async Task<ActionResult<ApiResponse>> GetAllProducts(int pageNumber = 1, int pageSize = 50)
         {
             var _response = new ApiResponse();
             try
             {
-                List<ProductDTO> products = await repository.GetAllProducts();
+                List<ProductDTO> products = await repository.GetAllProducts(pageNumber, pageSize);
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.Result = products;
                 _response.IsSuccess = true;
@@ -143,16 +143,25 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
             }
         }
         [HttpGet("PreviewProduct")]
-        public async Task<ActionResult<ApiResponse>> PreviewProduct(int productID)
+        public async Task<ActionResult<ApiResponse>> PreviewProduct(string productID)
         {
             var _response = new ApiResponse();
             try
             {
                 PreviewProductDTO preview = await repository.PreviewProduct(productID);
-                _response.StatusCode = HttpStatusCode.OK;
-                _response.Result = preview;
-                _response.IsSuccess = true;
-                _response.Message = "Get data successfully";
+                if (preview == null)
+                {
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    _response.IsSuccess = false;
+                    _response.Message = "Not found this product";
+                }
+                else
+                {
+                    _response.StatusCode = HttpStatusCode.OK;
+                    _response.Result = preview;
+                    _response.IsSuccess = true;
+                    _response.Message = "Get data successfully";
+                }
                 return Ok(_response);
             }
             catch (Exception ex)

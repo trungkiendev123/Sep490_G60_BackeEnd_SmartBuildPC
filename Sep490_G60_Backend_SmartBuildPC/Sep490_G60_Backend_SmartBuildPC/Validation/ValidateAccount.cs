@@ -133,6 +133,10 @@ namespace Sep490_G60_Backend_SmartBuildPC.Validation
             List<string> errors = new List<string>();
             try
             {
+                if (String.IsNullOrEmpty(request.AccounType) || (!request.AccounType.Equals("STAFF") && !request.AccounType.Equals("ADMIN")))
+                {
+                    errors.Add("Account type must be STAFF or ADMIN only");
+                }
                 if (String.IsNullOrEmpty(request.Username) || request.Username.Length > 50)
                 {
                     errors.Add("Username must not null,empty and < 50 characters");
@@ -179,8 +183,8 @@ namespace Sep490_G60_Backend_SmartBuildPC.Validation
             List<string> errors = new List<string>();
             try
             {
-                var ids = _context.Accounts.ToList().Select(x => x.AccountId.ToString());
-                if (!ids.Contains(request.AccountID))
+                var account = _context.Accounts.FirstOrDefault(x => x.AccountId.ToString().ToLower().Equals(request.AccountID.ToLower()));
+                if(account == null)
                 {
                     errors.Add("AccountID is not exist");
                 }

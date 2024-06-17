@@ -89,40 +89,75 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
 
 
 
-public async Task<List<ProductDTO>> GetAllProducts(int pageNumber = 1, int pageSize = 50)
-{
-    try
-    {
-        var query = _context.Products.AsQueryable();
-
-        var totalItems = await query.CountAsync();
-
-        var products = await query
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .Select(n => new ProductDTO
+        public async Task<List<ProductDTO>> GetAllProducts(int pageNumber = 1, int pageSize = 50)
+        {
+            try
             {
-                ProductId = n.ProductId,
-                CategoryName = n.Category.CategoryName,
-                ProductName = n.ProductName,
-                Description = n.Description,
-                Price = n.Price,
-                Warranty = n.Warranty,
-                Brand = n.Brand,
-                Tag = n.Tag,
-                TDP = (int)n.Tdp
-            })
-            .ToListAsync();
+                var query = _context.Products.AsQueryable();
 
-        return products;
-    }
-    catch (Exception ex)
-    {
-        throw new Exception("An error occurred while getting all products.", ex);
-    }
-}
+                var totalItems = await query.CountAsync();
 
-        
+                var products = await query
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(n => new ProductDTO
+                    {
+                        ProductId = n.ProductId,
+                        CategoryName = n.Category.CategoryName,
+                        ProductName = n.ProductName,
+                        Description = n.Description,
+                        Price = n.Price,
+                        Warranty = n.Warranty,
+                        Brand = n.Brand,
+                        Tag = n.Tag,
+                        TDP = (int)n.Tdp
+                    })
+                    .ToListAsync();
+
+                return products;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while getting all products.", ex);
+            }
+        }
+
+        public async Task<PreviewProductDTO> PreviewProduct(string id)
+        {
+            try
+            {
+                var product = await _context.Products.Include(x => x.ProductStores).ThenInclude(y => y.Store).FirstOrDefaultAsync(x => x.ProductId.Equals(id));
+                List<StoreDTO> stores = new();
+                if (product != null)
+                {
+                    var products_stores = product.ProductStores;
+                    foreach (ProductStore ps in products_stores)
+                    {
+                        stores.Add(new StoreDTO()
+                        {
+                            Name = ps.Store.StoreName,
+                            Address = ps.Store.Address
+                        });
+                    }
+                    return new PreviewProductDTO
+                    {
+                        price = product.Price,
+                        Warranty = product.Warranty,
+                        DetailProduct = product.Description,
+                        AvaibleStore = stores
+                    };
+                }
+
+                return null;
+
+                
+                
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while getting the products to preview.", ex);
+            }
+        }
 
 
 
@@ -155,65 +190,40 @@ public async Task<List<ProductDTO>> GetAllProducts(int pageNumber = 1, int pageS
 
 
         public async Task<List<ProductDTO>> GetProductsByKeyword(string keyword, int pageNumber = 1, int pageSize = 50)
-{
-    try
-    {
-        var query = _context.Products.AsQueryable();
-
-        if (!string.IsNullOrEmpty(keyword))
         {
             try
             {
-                var product = await _context.Products.Include(x => x.ProductStores).ThenInclude(y => y.Store).FirstOrDefaultAsync(x => x.ProductId == id);
-                List<StoreDTO> stores = new();
-                var products_stores = product.ProductStores;
-                foreach (ProductStore ps in products_stores)
+                var query = _context.Products.AsQueryable();
+
+                if (!string.IsNullOrEmpty(keyword))
                 {
-                    stores.Add(new StoreDTO()
-                    {
-                        Name = ps.Store.StoreName,
-                        Address = ps.Store.Address
-                    });
+                    query = query.Where(p => p.ProductName.Contains(keyword) || p.Description.Contains(keyword) || p.Tag.Contains(keyword));
                 }
-                return new PreviewProductDTO
-                {
-                    price = product.Price,
-                    Warranty = product.Warranty,
-                    DetailProduct = product.Description,
-                    AvaibleStore = stores
-                };
+
+                var products = await query
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(n => new ProductDTO
+                    {
+                        ProductId = n.ProductId,
+                        CategoryName = n.Category.CategoryName,
+                        ProductName = n.ProductName,
+                        Description = n.Description,
+                        Price = n.Price,
+                        Warranty = n.Warranty,
+                        Brand = n.Brand,
+                        Tag = n.Tag,
+                        TDP = (int)n.Tdp
+                    })
+                    .ToListAsync();
+
+                return products;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while getting the products to preview.", ex);
+                throw new Exception("An error occurred while getting products by keyword.", ex);
             }
-            query = query.Where(p => p.ProductName.Contains(keyword) || p.Description.Contains(keyword) || p.Tag.Contains(keyword));
         }
-
-        var products = await query
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .Select(n => new ProductDTO
-            {
-                ProductId = n.ProductId,
-                CategoryName = n.Category.CategoryName,
-                ProductName = n.ProductName,
-                Description = n.Description,
-                Price = n.Price,
-                Warranty = n.Warranty,
-                Brand = n.Brand,
-                Tag = n.Tag,
-                TDP = (int)n.Tdp
-            })
-            .ToListAsync();
-
-        return products;
-    }
-    catch (Exception ex)
-    {
-        throw new Exception("An error occurred while getting products by keyword.", ex);
-    }
-}
 
     }
 }
