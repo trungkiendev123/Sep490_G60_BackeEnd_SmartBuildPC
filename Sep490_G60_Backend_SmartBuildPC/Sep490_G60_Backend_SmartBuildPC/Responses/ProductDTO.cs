@@ -9,5 +9,10 @@
         public decimal Price { get; set; }
         public string Warranty { get; set; }
         public string Brand { get; set; }
+
+        public string Tag { get; set; }
+        public int TDP { get; set; }
+        public string? ImageLink { get; set; }
+        public List<string> StoreNames { get; set; }
     }
 }
