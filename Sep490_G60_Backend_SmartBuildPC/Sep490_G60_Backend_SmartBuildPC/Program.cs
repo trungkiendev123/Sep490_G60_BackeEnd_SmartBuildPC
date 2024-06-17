@@ -12,6 +12,10 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+if (!builder.Environment.IsDevelopment())
+    builder.WebHost.ConfigureKestrel(serverOptions => { serverOptions.ListenAnyIP(7065); });
+
+
 var secretKey = builder.Configuration["Config:SecretKey"];
 var secretKeyEncrypt = Encoding.UTF8.GetBytes(secretKey);
 // Add services to the container.
@@ -79,12 +83,12 @@ builder.Services.AddSwaggerGen(options =>
 });
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//// Configure the HTTP request pipeline.
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 app.UseCors(builder =>
 {
     builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "BVAPUjHekshn/7nVLTp5Tflofm7S/sp4bCmRpP9Ra7pYfoyiSUz0gmG+OkdDScnqdtLdgKLvHjYzojGNDJirFg==",
+  "dgSpecHash": "6SvkP6kP6ZYKF4bSsltQVKz28tjUa3lR9/dDfS7tWk/7uBUcKDsymhEPEr50pUsYA1c/9kgtM5IMogVNzK03gQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\SHD\\Desktop\\Backend\\Sep490_G60_BackeEnd_SmartBuildPC\\Sep490_G60_Backend_SmartBuildPC\\Sep490_G60_Backend_SmartBuildPC\\Sep490_G60_Backend_SmartBuildPC.csproj",
   "expectedPackageFiles": [
@@ -35,6 +35,7 @@
     "C:\\Users\\SHD\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
     "C:\\Users\\SHD\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "C:\\Users\\SHD\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\SHD\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.20.1\\microsoft.visualstudio.azure.containers.tools.targets.1.20.1.nupkg.sha512",
     "C:\\Users\\SHD\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\SHD\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
     "C:\\Users\\SHD\\.nuget\\packages\\swashbuckle.aspnetcore\\6.5.0\\swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
