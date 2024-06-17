@@ -25,10 +25,11 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
             _validate = validate;
             _repository = repository;
         }
-        [HttpPost("AddAccount")]
+        [HttpPost("AddCart")]
         [Authorize(Roles = "CUSTOMER")]
         public async Task<ActionResult<ApiResponse>> AddCart(AddCartRequest request)
         {
+            var email = User.Identity.Name;
             var _response = new ApiResponse();
             List<string> errors = _validate.validateCart(request);
             try
@@ -42,7 +43,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
                 }
                 else
                 {
-                    _repository.AddCart(request);
+                    _repository.AddCart(email,request);
                     _response.StatusCode = HttpStatusCode.Created;
                     _response.IsSuccess = true;
                     _response.Message = "Add cart success";
