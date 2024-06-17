@@ -88,30 +88,41 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
 
 
 
-        public async Task<List<ProductDTO>> GetAllProducts()
-        {
-            try
-            {
-                var products = await _context.Products
-                    .Select(n => new ProductDTO
-                    {
-                        ProductId = n.ProductId,
-                        CategoryName = n.Category.CategoryName,
-                        ProductName = n.ProductName,
-                        Description = n.Description,
-                        Price = n.Price,
-                        Warranty = n.Warranty,
-                        Brand = n.Brand
-                    })
-                    .ToListAsync();
-                return products;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An error occurred while getting all products.", ex);
-            }
-        }
 
+public async Task<List<ProductDTO>> GetAllProducts(int pageNumber = 1, int pageSize = 50)
+{
+    try
+    {
+        var query = _context.Products.AsQueryable();
+
+        var totalItems = await query.CountAsync();
+
+        var products = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(n => new ProductDTO
+            {
+                ProductId = n.ProductId,
+                CategoryName = n.Category.CategoryName,
+                ProductName = n.ProductName,
+                Description = n.Description,
+                Price = n.Price,
+                Warranty = n.Warranty,
+                Brand = n.Brand,
+                Tag = n.Tag,
+                TDP = (int)n.Tdp
+            })
+            .ToListAsync();
+
+        return products;
+    }
+    catch (Exception ex)
+    {
+        throw new Exception("An error occurred while getting all products.", ex);
+    }
+}
+
+        
 
 
 
@@ -140,7 +151,16 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
             }
         }
 
-        public async Task<PreviewProductDTO> PreviewProduct(int id)
+
+
+
+        public async Task<List<ProductDTO>> GetProductsByKeyword(string keyword, int pageNumber = 1, int pageSize = 50)
+{
+    try
+    {
+        var query = _context.Products.AsQueryable();
+
+        if (!string.IsNullOrEmpty(keyword))
         {
             try
             {
@@ -167,6 +187,33 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
             {
                 throw new Exception("An error occurred while getting the products to preview.", ex);
             }
+            query = query.Where(p => p.ProductName.Contains(keyword) || p.Description.Contains(keyword) || p.Tag.Contains(keyword));
         }
+
+        var products = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(n => new ProductDTO
+            {
+                ProductId = n.ProductId,
+                CategoryName = n.Category.CategoryName,
+                ProductName = n.ProductName,
+                Description = n.Description,
+                Price = n.Price,
+                Warranty = n.Warranty,
+                Brand = n.Brand,
+                Tag = n.Tag,
+                TDP = (int)n.Tdp
+            })
+            .ToListAsync();
+
+        return products;
+    }
+    catch (Exception ex)
+    {
+        throw new Exception("An error occurred while getting products by keyword.", ex);
+    }
+}
+
     }
 }
