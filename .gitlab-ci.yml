@@ -6,7 +6,7 @@ deploy:
   script:
   - echo '------------------------------------------BUILD IMAGE------------------------------------------'
   - cd Sep490_G60_Backend_SmartBuildPC
-  - docker build -t tutor_be -f Sep490_G60_Backend_SmartBuildPC/Dockerfile .
+  - docker build -t smartpc_be -f Sep490_G60_Backend_SmartBuildPC/Dockerfile .
   - docker images | grep "smartpc_be" | grep -v "latest" | awk '{print $3}' | xargs docker rmi  || true        #xóa tất cả các images ngoại trừ image mới nhất
   - echo '--------------------------------------------DEPLOY------------------------------------------'
   - docker stop smartpc_be_con  || true
