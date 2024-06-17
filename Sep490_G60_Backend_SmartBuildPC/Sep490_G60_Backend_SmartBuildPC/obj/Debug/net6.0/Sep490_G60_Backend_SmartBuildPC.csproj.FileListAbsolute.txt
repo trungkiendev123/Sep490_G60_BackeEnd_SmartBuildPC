@@ -134,3 +134,5 @@ C:\Users\SHD\Desktop\Backend\Sep490_G60_BackeEnd_SmartBuildPC\Sep490_G60_Backend
 C:\Users\SHD\Desktop\Backend\Sep490_G60_BackeEnd_SmartBuildPC\Sep490_G60_Backend_SmartBuildPC\Sep490_G60_Backend_SmartBuildPC\obj\Debug\net6.0\Sep490_G60_Backend_SmartBuildPC.pdb
 C:\Users\SHD\Desktop\Backend\Sep490_G60_BackeEnd_SmartBuildPC\Sep490_G60_Backend_SmartBuildPC\Sep490_G60_Backend_SmartBuildPC\obj\Debug\net6.0\Sep490_G60_Backend_SmartBuildPC.genruntimeconfig.cache
 C:\Users\SHD\Desktop\Backend\Sep490_G60_BackeEnd_SmartBuildPC\Sep490_G60_Backend_SmartBuildPC\Sep490_G60_Backend_SmartBuildPC\obj\Debug\net6.0\ref\Sep490_G60_Backend_SmartBuildPC.dll
+C:\Users\SHD\Desktop\Backend\Sep490_G60_BackeEnd_SmartBuildPC\Sep490_G60_Backend_SmartBuildPC\Sep490_G60_Backend_SmartBuildPC\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\SHD\Desktop\Backend\Sep490_G60_BackeEnd_SmartBuildPC\Sep490_G60_Backend_SmartBuildPC\Sep490_G60_Backend_SmartBuildPC\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll

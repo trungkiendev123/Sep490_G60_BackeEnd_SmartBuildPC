@@ -64,7 +64,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
             {
                 var products = await (from g in _context.Groups
                                       join pb in _context.PcbuildParts on g.PcbuildId equals pb.PcbuildId
-                                      join p in _context.Products on pb.PartId equals p.ProductId
+                                      join p in _context.Products on pb.Product.ProductId equals p.ProductId
                                       where g.Pctype == name
                                       select new ProductDTO
                                       {
@@ -162,6 +162,31 @@ public async Task<List<ProductDTO>> GetAllProducts(int pageNumber = 1, int pageS
 
         if (!string.IsNullOrEmpty(keyword))
         {
+            try
+            {
+                var product = await _context.Products.Include(x => x.ProductStores).ThenInclude(y => y.Store).FirstOrDefaultAsync(x => x.ProductId == id);
+                List<StoreDTO> stores = new();
+                var products_stores = product.ProductStores;
+                foreach (ProductStore ps in products_stores)
+                {
+                    stores.Add(new StoreDTO()
+                    {
+                        Name = ps.Store.StoreName,
+                        Address = ps.Store.Address
+                    });
+                }
+                return new PreviewProductDTO
+                {
+                    price = product.Price,
+                    Warranty = product.Warranty,
+                    DetailProduct = product.Description,
+                    AvaibleStore = stores
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while getting the products to preview.", ex);
+            }
             query = query.Where(p => p.ProductName.Contains(keyword) || p.Description.Contains(keyword) || p.Tag.Contains(keyword));
         }
 

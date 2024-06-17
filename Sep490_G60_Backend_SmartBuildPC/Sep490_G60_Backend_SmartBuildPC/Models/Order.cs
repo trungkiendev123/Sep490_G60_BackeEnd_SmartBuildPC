@@ -12,7 +12,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Models
         }
 
         public int OrderId { get; set; }
-        public int? CustomerId { get; set; }
+        public Guid? CustomerId { get; set; }
         public DateTime OrderDate { get; set; }
         public string OrderStatus { get; set; } = null!;
         public string? OrderAddress { get; set; }
