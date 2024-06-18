@@ -166,6 +166,36 @@ public async Task<ActionResult<ApiResponse>> GetAllProducts(int pageNumber = 1, 
 
 
 
+        [HttpGet("GetProductDetailsWithSimilarPriceRange")]
+[ProducesResponseType(StatusCodes.Status200OK)]
+[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+public async Task<ActionResult<ApiResponse>> GetProductDetailsWithSimilarPriceRange(int id, decimal priceRange)
+{
+    var _response = new ApiResponse();
+    try
+    {
+        var productDetails = await repository.GetProductDetailsWithSimilarPriceRange(id, priceRange);
+        if (productDetails == null)
+        {
+            _response.IsSuccess = false;
+            _response.ErrorMessages = new List<string> { "Product not found." };
+            return NotFound(_response);
+        }
+        _response.StatusCode = HttpStatusCode.OK;
+        _response.Result = productDetails;
+        _response.IsSuccess = true;
+        return Ok(_response);
+    }
+    catch (Exception ex)
+    {
+        _response.IsSuccess = false;
+        _response.ErrorMessages = new List<string> { ex.Message };
+        return StatusCode(StatusCodes.Status500InternalServerError, _response);
+    }
+}
+
+
+
 
     }
     }
