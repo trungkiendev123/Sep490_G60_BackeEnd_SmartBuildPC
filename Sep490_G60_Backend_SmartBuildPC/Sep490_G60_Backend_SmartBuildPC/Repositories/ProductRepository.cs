@@ -17,48 +17,56 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
 
     }
     public async Task<ProductDTO> GetProduct(int id)
+{
+    try
     {
-        try
-        {
-            var product = await (from p in _context.Products
-                                 join ps in _context.ProductStores on p.ProductId equals ps.ProductId
-                                 join s in _context.Stores on ps.StoreId equals s.StoreId
-                                 where p.ProductId == id
-                                 select new
-                                 {
-                                     p.ProductId,
-                                     p.Category.CategoryName,
-                                     p.ProductName,
-                                     p.Price,
-                                     p.Description,
-                                     p.Warranty,
-                                     p.Brand,
-                                     StoreNames = _context.ProductStores
-                                                    .Where(ps => ps.ProductId == p.ProductId)
-                                                    .Select(ps => ps.Store.StoreName)
-                                                    .ToList()
-                                 }).SingleAsync();
+        var product = await (from p in _context.Products
+                             where p.ProductId == id
+                             select new
+                             {
+                                 p.ProductId,
+                                 p.Category.CategoryName,
+                                 p.ProductName,
+                                 p.Price,
+                                 p.Description,
+                                 p.Warranty,
+                                 p.Brand,
+                                 p.Tag,
+                                 p.Tdp,
+                                 p.ImageLink,
+                                 StoreNames = _context.ProductStores
+                                                .Where(ps => ps.ProductId == p.ProductId)
+                                                .Select(ps => ps.Store.StoreName)
+                                                .ToList()
+                             }).SingleOrDefaultAsync();
 
-            var productDTO = new ProductDTO
-            {
-                ProductId = product.ProductId,
-                CategoryName = product.CategoryName,
-                ProductName = product.ProductName,
-                Price = product.Price,
-                Description = product.Description,
-                Warranty = product.Warranty,
-                Brand = product.Brand,
-                StoreNames = product.StoreNames
-            };
-
-            return productDTO;
-        }
-        catch (Exception ex)
+        if (product == null)
         {
-            throw new Exception("An error occurred while getting the product.", ex);
+            return null;
         }
+
+        var productDTO = new ProductDTO
+        {
+            ProductId = product.ProductId,
+            CategoryName = product.CategoryName,
+            ProductName = product.ProductName,
+            Price = product.Price,
+            Description = product.Description,
+            Warranty = product.Warranty,
+            Brand = product.Brand,
+            Tag = product.Tag,
+            TDP = (int)product.Tdp,
+            ImageLink = product.ImageLink,
+            StoreNames = product.StoreNames
+        };
+
+        return productDTO;
     }
-
+    catch (Exception ex)
+    {
+        throw new Exception("An error occurred while getting the product.", ex);
+    }
+}
 
 
     public async Task<List<ProductDTO>> GetProductByBrand(string brandName)
