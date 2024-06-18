@@ -78,6 +78,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
                 .Select(n => new ProductDTO
                 {
                     ProductId = n.ProductId,
+                    CategoryName = n.Category.CategoryName,
                     ProductName = n.ProductName,
                     Description = n.Description,
                     Price = n.Price,
@@ -276,6 +277,84 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
             throw new Exception("An error occurred while getting products by keyword.", ex);
         }
     }
+
+
+
+    public async Task<ProductDetailsDTO> GetProductDetailsWithSimilarPriceRange(int id, decimal priceRange)
+{
+    try
+    {
+        var product = await (from p in _context.Products
+                             where p.ProductId == id
+                             select new
+                             {
+                                 p.ProductId,
+                                 p.Category.CategoryName,
+                                 p.ProductName,
+                                 p.Price,
+                                 p.Description,
+                                 p.Warranty,
+                                 p.Brand,
+                                 p.Tag,
+                                 p.Tdp,
+                                 p.ImageLink,
+                                 StoreNames = _context.ProductStores
+                                                    .Where(ps => ps.ProductId == p.ProductId)
+                                                    .Select(ps => ps.Store.StoreName)
+                                                    .ToList()
+                             }).SingleOrDefaultAsync();
+
+        if (product == null)
+        {
+            return null;
+        }
+
+        var similarPriceProducts = await (from p in _context.Products
+                                          where p.Price >= product.Price - priceRange && p.Price <= product.Price + priceRange && p.ProductId != id
+                                          select new ProductDTO
+                                          {
+                                              ProductId = p.ProductId,
+                                              CategoryName = p.Category.CategoryName,
+                                              ProductName = p.ProductName,
+                                              Price = p.Price,
+                                              Description = p.Description,
+                                              Warranty = p.Warranty,
+                                              Brand = p.Brand,
+                                              Tag = p.Tag,
+                                              TDP = (int)p.Tdp,
+                                              ImageLink = p.ImageLink,
+                                              StoreNames = _context.ProductStores
+                                                                  .Where(ps => ps.ProductId == p.ProductId)
+                                                                  .Select(ps => ps.Store.StoreName)
+                                                                  .ToList()
+                                          }).ToListAsync();
+
+        var productDetailsDTO = new ProductDetailsDTO
+        {
+            Product = new ProductDTO
+            {
+                ProductId = product.ProductId,
+                CategoryName = product.CategoryName,
+                ProductName = product.ProductName,
+                Price = product.Price,
+                Description = product.Description,
+                Warranty = product.Warranty,
+                Brand = product.Brand,
+                Tag = product.Tag,
+                TDP = (int)product.Tdp,
+                ImageLink = product.ImageLink,
+                StoreNames = product.StoreNames
+            },
+            SimilarPriceProducts = similarPriceProducts
+        };
+
+        return productDetailsDTO;
+    }
+    catch (Exception ex)
+    {
+        throw new Exception("An error occurred while getting the product details with similar price range.", ex);
+    }
+}
 
 
 }
