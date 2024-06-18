@@ -21,8 +21,10 @@ var secretKeyEncrypt = Encoding.UTF8.GetBytes(secretKey);
 // Add services to the container.
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<IStoreRepository, StoreRepository>();
 builder.Services.AddScoped<TokenGenerate>();
+builder.Services.AddScoped<ValidateCart>();
 builder.Services.AddScoped<ValidateAccount>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
