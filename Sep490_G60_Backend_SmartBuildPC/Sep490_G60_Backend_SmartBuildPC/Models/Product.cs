@@ -7,6 +7,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Models
     {
         public Product()
         {
+            Carts = new HashSet<Cart>();
             Comments = new HashSet<Comment>();
             ProductStores = new HashSet<ProductStore>();
             ProductWarranties = new HashSet<ProductWarranty>();
@@ -24,6 +25,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Models
         public string? ImageLink { get; set; }
 
         public virtual Category? Category { get; set; }
+        public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<ProductStore> ProductStores { get; set; }
         public virtual ICollection<ProductWarranty> ProductWarranties { get; set; }

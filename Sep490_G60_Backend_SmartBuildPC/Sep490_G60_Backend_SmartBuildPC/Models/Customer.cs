@@ -19,6 +19,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Models
         public string Address { get; set; } = null!;
 
         public virtual Account Account { get; set; } = null!;
+        public virtual Cart? Cart { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Pcbuild> Pcbuilds { get; set; }

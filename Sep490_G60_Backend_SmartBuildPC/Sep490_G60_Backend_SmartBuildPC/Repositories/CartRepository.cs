@@ -12,13 +12,13 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
         {
             _context = context;
         }
-        public async void AddCart(string email,AddCartRequest request)
+        public void AddCart(string email,AddCartRequest request)
         {
             try
             {
-                var account = await _context.Accounts.FirstOrDefaultAsync(x => x.Email.Equals(email));
-                var customer = await _context.Customers.FirstOrDefaultAsync(x => x.AccountId.Equals(account.AccountId));
-                var cartUser = await _context.Carts.FirstOrDefaultAsync(x => x.CustomerId.Equals(customer.CustomerId) && x.ProductId == request.ProductID);
+                var account =  _context.Accounts.FirstOrDefault(x => x.Email.Equals(email));
+                var customer =  _context.Customers.FirstOrDefault(x => x.AccountId.Equals(account.AccountId));
+                var cartUser =  _context.Carts.FirstOrDefault(x => x.CustomerId.ToString().ToUpper().Equals(customer.CustomerId.ToString().ToUpper()) && x.ProductId == request.ProductID);
                 if(cartUser == null)
                 {
                     Cart cart = new Cart()
@@ -28,14 +28,13 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
                         Quantity = request.Quantity
                     };
                     _context.Carts.Add(cart);
-                    _context.SaveChanges();
                 }
                 else
                 {
                     cartUser.Quantity += request.Quantity;
                     _context.Carts.Update(cartUser);
-                    _context.SaveChanges();
                 }
+                _context.SaveChanges();
 
             }
             catch (Exception ex)

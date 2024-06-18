@@ -41,7 +41,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=14.225.205.28;Database=smartpc;user=sa;password=Abc@123123;Trust Server Certificate=True");
+                optionsBuilder.UseSqlServer("Server=localhost;Database=SMARTPC;Trusted_Connection=True;");
             }
         }
 
@@ -108,21 +108,24 @@ namespace Sep490_G60_Backend_SmartBuildPC.Models
 
             modelBuilder.Entity<Cart>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.CustomerId);
 
                 entity.ToTable("Cart");
 
-                entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
+                entity.Property(e => e.CustomerId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("CustomerID");
 
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
 
                 entity.HasOne(d => d.Customer)
-                    .WithMany()
-                    .HasForeignKey(d => d.CustomerId)
+                    .WithOne(p => p.Cart)
+                    .HasForeignKey<Cart>(d => d.CustomerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Cart__CustomerID__00200768");
 
                 entity.HasOne(d => d.Product)
-                    .WithMany()
+                    .WithMany(p => p.Carts)
                     .HasForeignKey(d => d.ProductId)
                     .HasConstraintName("FK__Cart__ProductID__5AEE82B9");
             });
