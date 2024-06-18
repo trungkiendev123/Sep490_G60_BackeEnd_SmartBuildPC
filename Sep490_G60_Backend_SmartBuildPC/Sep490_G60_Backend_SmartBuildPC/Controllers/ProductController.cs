@@ -21,27 +21,33 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
 
 
 
-        [HttpGet("GetProducts")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<ApiResponse>> ListProducts(int id)
-        {
-            var _response = new ApiResponse();
-            try
-            {
-                ProductDTO products = await repository.GetProduct(id);
-                _response.StatusCode = HttpStatusCode.OK;
-                _response.Result = products;
-                _response.IsSuccess = true;
-                return Ok(_response);
-            }
-            catch (Exception ex)
-            {
-                _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.Message };
-                return StatusCode(StatusCodes.Status500InternalServerError, _response);
-            }
-        }
+         [HttpGet("GetProducts")]
+ [ProducesResponseType(StatusCodes.Status200OK)]
+ [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+ public async Task<ActionResult<ApiResponse>> GetProducts(int id)
+ {
+     var _response = new ApiResponse();
+     try
+     {
+         var product = await repository.GetProduct(id);
+         if (product == null)
+         {
+             _response.IsSuccess = false;
+             _response.ErrorMessages = new List<string> { "Product not found." };
+             return NotFound(_response);
+         }
+         _response.StatusCode = HttpStatusCode.OK;
+         _response.Result = product;
+         _response.IsSuccess = true;
+         return Ok(_response);
+     }
+     catch (Exception ex)
+     {
+         _response.IsSuccess = false;
+         _response.ErrorMessages = new List<string> { ex.Message };
+         return StatusCode(StatusCodes.Status500InternalServerError, _response);
+     }
+ }
 
 
 
