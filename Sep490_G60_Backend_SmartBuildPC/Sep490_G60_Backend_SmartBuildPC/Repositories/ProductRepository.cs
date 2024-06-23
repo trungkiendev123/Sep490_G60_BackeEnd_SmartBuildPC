@@ -357,5 +357,117 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
 }
 
 
+
+    public async Task<ProductDTO> CreateProduct(CreateProductDTO createProductDTO)
+{
+    try
+    {
+        var product = new Product
+        {
+            CategoryId = createProductDTO.CategoryID,
+            ProductName = createProductDTO.ProductName,
+            Description = createProductDTO.Description,
+            Price = createProductDTO.Price,
+            Warranty = createProductDTO.Warranty,
+            Brand = createProductDTO.Brand,
+            Tag = createProductDTO.Tag,
+            Tdp = createProductDTO.TDP,
+            ImageLink = createProductDTO.ImageLink
+        };
+
+        _context.Products.Add(product);
+        await _context.SaveChangesAsync();
+
+        var productDTO = new ProductDTO
+        {
+            ProductId = product.ProductId,
+            CategoryID = (int)product.CategoryId,
+            
+            ProductName = product.ProductName,
+            Description = product.Description,
+            Price = product.Price,
+            Warranty = product.Warranty,
+            Brand = product.Brand,
+            Tag = product.Tag,
+            TDP = (int)product.Tdp,
+            ImageLink = product.ImageLink,
+            
+        };
+
+        return productDTO;
+    }
+    catch (Exception ex)
+    {
+        throw new Exception("An error occurred while creating the product.", ex);
+    }
+}
+
+
+
+public async Task<bool> DeleteProduct(int id)
+{
+    try
+    {
+        var product = await _context.Products.FindAsync(id);
+        if (product == null)
+        {
+            return false;
+        }
+
+        _context.Products.Remove(product);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+    catch (Exception ex)
+    {
+        throw new Exception("An error occurred while deleting the product.", ex);
+    }
+}
+
+
+public async Task<ProductDTO> UpdateProduct(int id, UpdateProductDTO updateProductDTO)
+{
+    try
+    {
+        var product = await _context.Products.FindAsync(id);
+        if (product == null)
+        {
+            throw new Exception("Product not found.");
+        }
+
+        product.ProductName = updateProductDTO.ProductName;
+        product.Description = updateProductDTO.Description;
+        product.Price = updateProductDTO.Price;
+        product.Warranty = updateProductDTO.Warranty;
+        product.Brand = updateProductDTO.Brand;
+        product.Tag = updateProductDTO.Tag;
+        product.Tdp = updateProductDTO.TDP;
+        product.ImageLink = updateProductDTO.ImageLink;
+        product.CategoryId = updateProductDTO.CategoryID;
+
+        _context.Products.Update(product);
+        await _context.SaveChangesAsync();
+
+        return new ProductDTO
+        {
+            ProductId = product.ProductId,
+            ProductName = product.ProductName,
+            Description = product.Description,
+            Price = product.Price,
+            Warranty = product.Warranty,
+            Brand = product.Brand,
+            Tag = product.Tag,
+            TDP = (int)product.Tdp,
+            ImageLink = product.ImageLink,
+            CategoryID = (int)product.CategoryId
+        };
+    }
+    catch (Exception ex)
+    {
+        throw new Exception("An error occurred while updating the product.", ex);
+    }
+}
+
+
 }
 }
