@@ -196,6 +196,92 @@ public async Task<ActionResult<ApiResponse>> GetProductDetailsWithSimilarPriceRa
 
 
 
+     [HttpPost("CreateProduct")]
+[ProducesResponseType(StatusCodes.Status201Created)]
+[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+public async Task<ActionResult<ApiResponse>> CreateProduct([FromBody] CreateProductDTO createProductDTO)
+{
+    var response = new ApiResponse();
+    try
+    {
+        var product = await repository.CreateProduct(createProductDTO);
+        response.StatusCode = HttpStatusCode.Created;
+        response.Result = product;
+        response.IsSuccess = true;
+        return CreatedAtAction(nameof(GetProducts), new { id = product.ProductId }, response);
+    }
+    catch (Exception ex)
+    {
+        response.IsSuccess = false;
+        response.ErrorMessages = new List<string> { ex.Message };
+        return StatusCode(StatusCodes.Status500InternalServerError, response);
+    }
+}
+
+
+
+[HttpDelete("DeleteProduct/{id}")]
+[ProducesResponseType(StatusCodes.Status200OK)]
+[ProducesResponseType(StatusCodes.Status404NotFound)]
+public async Task<ActionResult<ApiResponse>> DeleteProduct(int id)
+{
+    var _response = new ApiResponse();
+    try
+    {
+        var result = await repository.DeleteProduct(id);
+        if (!result)
+        {
+            _response.IsSuccess = false;
+            _response.ErrorMessages = new List<string> { "Product not found." };
+            _response.StatusCode = HttpStatusCode.NotFound;
+            return NotFound(_response);
+        }
+
+        _response.StatusCode = HttpStatusCode.OK;
+        _response.IsSuccess = true;
+        return Ok(_response);
+    }
+    catch (Exception ex)
+    {
+        _response.IsSuccess = false;
+        _response.ErrorMessages = new List<string> { ex.Message };
+        return StatusCode(StatusCodes.Status500InternalServerError, _response);
+    }
+}
+
+
+[HttpPut("UpdateProduct/{id}")]
+[ProducesResponseType(StatusCodes.Status200OK)]
+[ProducesResponseType(StatusCodes.Status404NotFound)]
+public async Task<ActionResult<ApiResponse>> UpdateProduct(int id, [FromBody] UpdateProductDTO updateProductDTO)
+{
+    var _response = new ApiResponse();
+    try
+    {
+        var updatedProduct = await repository.UpdateProduct(id, updateProductDTO);
+        if (updatedProduct == null)
+        {
+            _response.IsSuccess = false;
+            _response.ErrorMessages = new List<string> { "Product not found." };
+            _response.StatusCode = HttpStatusCode.NotFound;
+            return NotFound(_response);
+        }
+
+        _response.StatusCode = HttpStatusCode.OK;
+        _response.Result = updatedProduct;
+        _response.IsSuccess = true;
+        return Ok(_response);
+    }
+    catch (Exception ex)
+    {
+        _response.IsSuccess = false;
+        _response.ErrorMessages = new List<string> { ex.Message };
+        return StatusCode(StatusCodes.Status500InternalServerError, _response);
+    }
+}
+
+
+
 
     }
     }
