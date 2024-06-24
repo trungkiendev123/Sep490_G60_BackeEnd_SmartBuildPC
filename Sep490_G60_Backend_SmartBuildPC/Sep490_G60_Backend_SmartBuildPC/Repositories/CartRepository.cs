@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sep490_G60_Backend_SmartBuildPC.Models;
 using Sep490_G60_Backend_SmartBuildPC.Requests;
+using Sep490_G60_Backend_SmartBuildPC.Responses;
 using Sep490_G60_Backend_SmartBuildPC.Service;
 
 namespace Sep490_G60_Backend_SmartBuildPC.Repositories
@@ -84,6 +85,37 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
                     _context.Carts.Remove(cartUser);
                     _context.SaveChanges();
                 }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while do this action", ex);
+            }
+        }
+        public List<ItemCartDTO> ShowCart(string email)
+        {
+            try
+            {
+                var account = _context.Accounts.FirstOrDefault(x => x.Email.Equals(email));
+                var customer = _context.Customers.FirstOrDefault(x => x.AccountId.Equals(account.AccountId));
+                var cartUser = _context.Carts.Include(x => x.Product).Where(x => x.CustomerId.ToString().ToUpper().Equals(customer.CustomerId.ToString().ToUpper())).ToList();
+                List<ItemCartDTO> returnList = new();
+                if (cartUser != null)
+                {
+                    foreach(var item in cartUser)
+                    {
+                        ItemCartDTO dto = new ItemCartDTO()
+                        {
+                            ProductId = item.Product.ProductId,
+                            ProductName = item.Product.ProductName,
+                            ImageLink = item.Product.ImageLink,
+                            Price = item.Product.Price,
+                            quantity = item.Quantity
+                        };
+                        returnList.Add(dto);
+                    }
+                }
+                return returnList;
 
             }
             catch (Exception ex)
