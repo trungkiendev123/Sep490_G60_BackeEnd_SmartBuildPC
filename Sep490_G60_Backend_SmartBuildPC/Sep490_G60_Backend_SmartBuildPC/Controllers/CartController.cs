@@ -138,5 +138,41 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
             }
 
         }
+        [HttpGet("ShowCart")]
+        [Authorize(Roles = "CUSTOMER")]
+        public async Task<ActionResult<ApiResponse>> ShowCart()
+        {
+            var email = User.Identity.Name;
+            var _response = new ApiResponse();
+            List<ItemCartDTO> list = _repository.ShowCart(email);
+            try
+            {
+                if (list.Count == 0)
+                {
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    _response.IsSuccess = false;
+                    _response.Message = "Not found any item in cart";
+                }
+                else
+                {
+                    _response.StatusCode = HttpStatusCode.OK;
+                    _response.IsSuccess = true;
+                    _response.Result = list;
+                    _response.Message = "Show cart item success";
+                }
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    IsSuccess = false,
+                    Message = "Show cart item fail",
+                    ErrorMessages = new List<string> { "Something error from the server" }
+                };
+            }
+
+        }
     }
 }
