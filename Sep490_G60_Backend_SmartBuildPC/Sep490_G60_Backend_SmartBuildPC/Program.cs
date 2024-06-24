@@ -33,21 +33,20 @@ builder.Services.AddScoped<IBuildPCRepository, BuildPCRepository>();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllersWithViews().AddJsonOptions(option => option.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddDbContext<SMARTPCContext>(options => options.UseSqlServer(
-            builder.Configuration.GetConnectionString("DefaultConnection")
-            ));
+builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services
-                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(option =>
-                {
-                    option.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(secretKeyEncrypt),
-                        ClockSkew = TimeSpan.Zero
-                    };
-                });
+        .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(option =>
+        {
+            option.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(secretKeyEncrypt),
+                ClockSkew = TimeSpan.Zero
+            };
+        });
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition(
@@ -66,20 +65,20 @@ builder.Services.AddSwaggerGen(options =>
     options.AddSecurityRequirement(
         new OpenApiSecurityRequirement()
         {
-                        {
-                            new OpenApiSecurityScheme
-                            {
-                                Reference = new OpenApiReference
-                                {
-                                    Type = ReferenceType.SecurityScheme,
-                                    Id = "Bearer"
-                                },
-                                Scheme = "oauth2",
-                                Name = "Bearer",
-                                In = ParameterLocation.Header
-                            },
-                            new List<string>()
-                        }
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    },
+                    Scheme = "oauth2",
+                    Name = "Bearer",
+                    In = ParameterLocation.Header
+                },
+                new List<string>()
+            }
         }
     );
 });
@@ -88,8 +87,8 @@ var app = builder.Build();
 //// Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI();
 //}
 app.UseCors(builder =>
 {
