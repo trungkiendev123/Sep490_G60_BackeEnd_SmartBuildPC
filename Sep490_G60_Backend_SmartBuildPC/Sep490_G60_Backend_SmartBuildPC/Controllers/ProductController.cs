@@ -197,8 +197,6 @@ public async Task<ActionResult<ApiResponse>> GetProductDetailsWithSimilarPriceRa
 
 
      [HttpPost("CreateProduct")]
-[ProducesResponseType(StatusCodes.Status201Created)]
-[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 public async Task<ActionResult<ApiResponse>> CreateProduct([FromBody] CreateProductDTO createProductDTO)
 {
     var response = new ApiResponse();
@@ -228,8 +226,8 @@ public async Task<ActionResult<ApiResponse>> DeleteProduct(int id)
     var _response = new ApiResponse();
     try
     {
-        var result = await repository.DeleteProduct(id);
-        if (!result)
+        var isDeleted = await repository.DeleteProduct(id);
+        if (!isDeleted)
         {
             _response.IsSuccess = false;
             _response.ErrorMessages = new List<string> { "Product not found." };
