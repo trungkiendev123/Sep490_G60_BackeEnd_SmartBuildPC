@@ -10,7 +10,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Validation
         {
             _context = context;
         }
-        public List<string> validateCart(AddCartRequest request)
+        public List<string> validateCart(ChangeCartRequest request)
         {
             List<string> errors = new List<string>();
             try

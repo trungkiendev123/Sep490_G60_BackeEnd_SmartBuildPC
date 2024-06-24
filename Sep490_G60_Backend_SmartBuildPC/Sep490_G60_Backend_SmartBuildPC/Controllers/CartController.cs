@@ -27,7 +27,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
         }
         [HttpPost("AddCart")]
         [Authorize(Roles = "CUSTOMER")]
-        public async Task<ActionResult<ApiResponse>> AddCart(AddCartRequest request)
+        public async Task<ActionResult<ApiResponse>> AddCart(ChangeCartRequest request)
         {
             var email = User.Identity.Name;
             var _response = new ApiResponse();
