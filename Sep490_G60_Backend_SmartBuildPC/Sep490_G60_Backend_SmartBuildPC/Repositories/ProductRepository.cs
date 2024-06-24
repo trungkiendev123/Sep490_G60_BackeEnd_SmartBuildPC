@@ -540,5 +540,54 @@ public async Task<ProductDTO> UpdateProduct(int id, UpdateProductDTO updateProdu
 }
 
 
+    
+    
+    
+    public async Task<List<ProductDTO>> FilterProducts(ProductFilterDTOHome filterDTO)
+{
+    var query = _context.Products.AsQueryable();
+
+    if (!string.IsNullOrEmpty(filterDTO.StoreName))
+    {
+        query = query.Where(p => p.ProductStores.Any(ps => ps.Store.StoreName == filterDTO.StoreName));
+    }
+
+    if (filterDTO.PriceFrom.HasValue)
+    {
+        query = query.Where(p => p.Price >= filterDTO.PriceFrom.Value);
+    }
+
+    if (filterDTO.PriceTo.HasValue)
+    {
+        query = query.Where(p => p.Price <= filterDTO.PriceTo.Value);
+    }
+
+    
+
+    if (!string.IsNullOrEmpty(filterDTO.Category))
+    {
+        query = query.Where(p => p.Category.CategoryName == filterDTO.Category);
+    }
+
+    var products = await query.Select(p => new ProductDTO
+    {
+        ProductId = p.ProductId,
+        ProductName = p.ProductName,
+        Description = p.Description,
+        Price = p.Price,
+        Warranty = p.Warranty,
+        Brand = p.Brand,
+        Tag = p.Tag,
+        TDP = (int)p.Tdp,
+        ImageLink = p.ImageLink,
+        
+        CategoryName = p.Category.CategoryName,
+        StoreNames = p.ProductStores.Select(ps => ps.Store.StoreName).ToList()
+    }).ToListAsync();
+
+    return products;
+}
+
+
 }
 }
