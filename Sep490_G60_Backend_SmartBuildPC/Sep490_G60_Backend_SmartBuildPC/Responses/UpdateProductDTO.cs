@@ -2,6 +2,7 @@
 {
     public class UpdateProductDTO
     {
+        public int ProductId { get; set; }
         public int CategoryID { get; set; }
         public string ProductName { get; set; } = null!;
         public string Description { get; set; }
@@ -11,6 +12,7 @@
         public string Tag { get; set; }
         public int TDP { get; set; }
         public string ImageLink { get; set; }
+        public List<StoreStockDTO> StoreStocks { get; set; }
         
     }
 }
