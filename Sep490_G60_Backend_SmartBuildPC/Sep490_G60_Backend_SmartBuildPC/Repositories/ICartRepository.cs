@@ -7,5 +7,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
         public void AddCart(string email, ChangeCartRequest request);
 
         public void UpdateCart(string email, ChangeCartRequest request);
+
+        public void DeleteCart(string email, int productID);
     }
 }
