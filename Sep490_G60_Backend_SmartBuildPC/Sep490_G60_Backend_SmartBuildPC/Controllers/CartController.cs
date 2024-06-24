@@ -62,5 +62,42 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
             }
 
         }
+        [HttpPost("UpdateCart")]
+        [Authorize(Roles = "CUSTOMER")]
+        public async Task<ActionResult<ApiResponse>> UpdateCart(ChangeCartRequest request)
+        {
+            var email = User.Identity.Name;
+            var _response = new ApiResponse();
+            List<string> errors = _validate.validateCart(request);
+            try
+            {
+                if (errors.Count > 0)
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = false;
+                    _response.Message = "Update cart fail";
+                    _response.ErrorMessages = errors;
+                }
+                else
+                {
+                    _repository.UpdateCart(email, request);
+                    _response.StatusCode = HttpStatusCode.Created;
+                    _response.IsSuccess = true;
+                    _response.Message = "Update cart success";
+                }
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    IsSuccess = false,
+                    Message = "Update cart fail",
+                    ErrorMessages = new List<string> { "Something error from the server" }
+                };
+            }
+
+        }
     }
 }
