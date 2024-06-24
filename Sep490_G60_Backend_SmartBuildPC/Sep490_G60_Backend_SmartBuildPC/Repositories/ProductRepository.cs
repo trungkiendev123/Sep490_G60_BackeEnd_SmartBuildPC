@@ -360,8 +360,19 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
 
     public async Task<ProductDTO> CreateProduct(CreateProductDTO createProductDTO)
 {
+    using var transaction = await _context.Database.BeginTransactionAsync();
     try
     {
+        
+        var category = await _context.Categories
+            .FirstOrDefaultAsync(c => c.CategoryId == createProductDTO.CategoryID);
+
+        if (category == null)
+        {
+            throw new Exception("Category not found.");
+        }
+
+        
         var product = new Product
         {
             CategoryId = createProductDTO.CategoryID,
@@ -378,11 +389,36 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
 
+        
+        foreach (var storeStock in createProductDTO.StoreStocks)
+        {
+            var store = await _context.Stores
+                .FirstOrDefaultAsync(s => s.StoreId == storeStock.StoreID);
+
+            if (store == null)
+            {
+                throw new Exception($"Store with ID {storeStock.StoreID} not found.");
+            }
+
+            var productStore = new ProductStore
+            {
+                ProductId = product.ProductId,
+                StoreId = store.StoreId,
+                StockQuantity = storeStock.StockQuantity
+            };
+
+            _context.ProductStores.Add(productStore);
+        }
+
+        await _context.SaveChangesAsync();
+        await transaction.CommitAsync();
+
+        
         var productDTO = new ProductDTO
         {
             ProductId = product.ProductId,
-            CategoryID = (int)product.CategoryId,
-            
+            CategoryID = category.CategoryId,  
+            CategoryName = category.CategoryName,
             ProductName = product.ProductName,
             Description = product.Description,
             Price = product.Price,
@@ -391,13 +427,14 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
             Tag = product.Tag,
             TDP = (int)product.Tdp,
             ImageLink = product.ImageLink,
-            
+            StoreNames = createProductDTO.StoreStocks.Select(ss => _context.Stores.FirstOrDefault(s => s.StoreId == ss.StoreID)?.StoreName).ToList()
         };
 
         return productDTO;
     }
     catch (Exception ex)
     {
+        await transaction.RollbackAsync();
         throw new Exception("An error occurred while creating the product.", ex);
     }
 }
@@ -408,14 +445,19 @@ public async Task<bool> DeleteProduct(int id)
 {
     try
     {
-        var product = await _context.Products.FindAsync(id);
+        var product = await _context.Products
+            .Include(p => p.ProductStores)
+            .FirstOrDefaultAsync(p => p.ProductId == id);
+
         if (product == null)
         {
             return false;
         }
 
-        _context.Products.Remove(product);
+        _context.ProductStores.RemoveRange(product.ProductStores); 
+        _context.Products.Remove(product); 
         await _context.SaveChangesAsync();
+
         return true;
     }
     catch (Exception ex)
@@ -425,16 +467,21 @@ public async Task<bool> DeleteProduct(int id)
 }
 
 
+
 public async Task<ProductDTO> UpdateProduct(int id, UpdateProductDTO updateProductDTO)
 {
     try
     {
-        var product = await _context.Products.FindAsync(id);
+        var product = await _context.Products
+            .Include(p => p.ProductStores)
+            .FirstOrDefaultAsync(p => p.ProductId == id);
+
         if (product == null)
         {
-            throw new Exception("Product not found.");
+            return null;
         }
 
+        product.CategoryId = updateProductDTO.CategoryID;
         product.ProductName = updateProductDTO.ProductName;
         product.Description = updateProductDTO.Description;
         product.Price = updateProductDTO.Price;
@@ -443,14 +490,36 @@ public async Task<ProductDTO> UpdateProduct(int id, UpdateProductDTO updateProdu
         product.Tag = updateProductDTO.Tag;
         product.Tdp = updateProductDTO.TDP;
         product.ImageLink = updateProductDTO.ImageLink;
-        product.CategoryId = updateProductDTO.CategoryID;
+
+        
+        foreach (var storeStock in updateProductDTO.StoreStocks)
+        {
+            var productStore = product.ProductStores
+                .FirstOrDefault(ps => ps.StoreId == storeStock.StoreID);
+
+            if (productStore == null)
+            {
+                product.ProductStores.Add(new ProductStore
+                {
+                    ProductId = product.ProductId,
+                    StoreId = storeStock.StoreID,
+                    StockQuantity = storeStock.StockQuantity
+                });
+            }
+            else
+            {
+                productStore.StockQuantity = storeStock.StockQuantity;
+            }
+        }
 
         _context.Products.Update(product);
         await _context.SaveChangesAsync();
 
-        return new ProductDTO
+        
+        var productDTO = new ProductDTO
         {
             ProductId = product.ProductId,
+            CategoryID = (int)product.CategoryId,
             ProductName = product.ProductName,
             Description = product.Description,
             Price = product.Price,
@@ -459,8 +528,10 @@ public async Task<ProductDTO> UpdateProduct(int id, UpdateProductDTO updateProdu
             Tag = product.Tag,
             TDP = (int)product.Tdp,
             ImageLink = product.ImageLink,
-            CategoryID = (int)product.CategoryId
+            StoreNames = updateProductDTO.StoreStocks.Select(ss => _context.Stores.FirstOrDefault(s => s.StoreId == ss.StoreID)?.StoreName).ToList()
         };
+
+        return productDTO;
     }
     catch (Exception ex)
     {
