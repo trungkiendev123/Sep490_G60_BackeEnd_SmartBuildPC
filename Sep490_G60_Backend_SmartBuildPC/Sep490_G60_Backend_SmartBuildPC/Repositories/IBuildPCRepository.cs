@@ -7,5 +7,10 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
         Task<IEnumerable<CategoryDTO>> listCategory();
         Task<IEnumerable<FilterDTO>> getFilterOfCategory(int cate_id);
 
+        void AddProductToPC(int productID);
+
+        Task<MatchingDTO> GetMatching(string email, int buildID);
+
+
     }
 }

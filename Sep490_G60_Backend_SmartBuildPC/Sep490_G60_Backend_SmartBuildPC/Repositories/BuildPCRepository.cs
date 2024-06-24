@@ -12,6 +12,19 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
             _context = context;
         }
 
+        public void AddProductToPC(int productID)
+        {
+            try
+            {
+                
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while do this action", ex);
+            }
+        }
+
         public async Task<IEnumerable<FilterDTO>> getFilterOfCategory(int cate_id)
         {
             try
@@ -66,6 +79,48 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
                 });
 
             }catch(Exception ex)
+            {
+                throw new Exception("An error occurred while do this action", ex);
+            }
+        }
+
+        public async Task<MatchingDTO> GetMatching(string email,int buildID)
+        {
+            try
+            {
+                int totalTDP = 0;
+                int? supplier = null;
+                List<string> tags = new List<string>();
+                var account = _context.Accounts.FirstOrDefault(x => x.Email.Equals(email));
+                var customer = _context.Customers.FirstOrDefault(x => x.AccountId.Equals(account.AccountId));
+                var buildPC = await _context.Pcbuilds.FirstOrDefaultAsync(x => x.CustomerId.ToString().ToUpper().Equals(customer.CustomerId.ToString().ToUpper()) && x.PcbuildId == buildID);
+                if(buildPC != null)
+                {
+                    var items = await _context.PcbuildParts.Include(x => x.Product).Where(x => x.PcbuildId == buildPC.PcbuildId).ToListAsync();
+                    if (items != null)
+                    {
+                        foreach (var item in items)
+                        {
+                            totalTDP += (int)item.Product.Tdp;
+                            if(item.Product.CategoryId == 7)
+                            {
+                                supplier = item.Product.Tdp;
+                            }
+                            tags.Add(item.Product.Tag);
+
+                        }
+                    }
+                }
+                return new MatchingDTO()
+                {
+                    totalTDP = totalTDP,
+                    listTag = tags,
+                    supplierChoosen = supplier
+                };
+               
+                
+            }
+            catch (Exception ex)
             {
                 throw new Exception("An error occurred while do this action", ex);
             }
