@@ -19,10 +19,9 @@ namespace Sep490_G60_Backend_SmartBuildPC.Validation
                 {
                     errors.Add("Quantity must > 0");
                 }
-                var ids = _context.Products.ToList().Select(x => x.ProductId);
-                if (!ids.Contains(request.ProductID))
+                if (!isExistProductID(request.ProductID))
                 {
-                    errors.Add("Product ID not found");
+                    errors.Add("ProductID not exist");
                 }
 
             }
@@ -31,6 +30,15 @@ namespace Sep490_G60_Backend_SmartBuildPC.Validation
                 errors.Add(e.Message);
             }
             return errors;
+        }
+        public bool isExistProductID(int productID)
+        {
+            var ids = _context.Products.ToList().Select(x => x.ProductId);
+            if (!ids.Contains(productID))
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

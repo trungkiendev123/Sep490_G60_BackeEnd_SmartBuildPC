@@ -62,7 +62,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
             }
 
         }
-        [HttpPost("UpdateCart")]
+        [HttpPut("UpdateCart")]
         [Authorize(Roles = "CUSTOMER")]
         public async Task<ActionResult<ApiResponse>> UpdateCart(ChangeCartRequest request)
         {
@@ -81,7 +81,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
                 else
                 {
                     _repository.UpdateCart(email, request);
-                    _response.StatusCode = HttpStatusCode.Created;
+                    _response.StatusCode = HttpStatusCode.OK;
                     _response.IsSuccess = true;
                     _response.Message = "Update cart success";
                 }
@@ -94,6 +94,45 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
                     StatusCode = HttpStatusCode.InternalServerError,
                     IsSuccess = false,
                     Message = "Update cart fail",
+                    ErrorMessages = new List<string> { "Something error from the server" }
+                };
+            }
+
+        }
+        [HttpDelete("DeleteCart")]
+        [Authorize(Roles = "CUSTOMER")]
+        public async Task<ActionResult<ApiResponse>> DeleteCart(int productID)
+        {
+            var email = User.Identity.Name;
+            var _response = new ApiResponse();
+            bool check = _validate.isExistProductID(productID);
+            List<string> errors = new();
+            try
+            {
+                if (!check)
+                {
+                    errors.Add("ProductID not found");
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = false;
+                    _response.Message = "Delete cart item fail";
+                    _response.ErrorMessages = errors;
+                }
+                else
+                {
+                    _repository.DeleteCart(email, productID);
+                    _response.StatusCode = HttpStatusCode.OK;
+                    _response.IsSuccess = true;
+                    _response.Message = "Delete cart item success";
+                }
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    IsSuccess = false,
+                    Message = "Delete cart item fail",
                     ErrorMessages = new List<string> { "Something error from the server" }
                 };
             }
