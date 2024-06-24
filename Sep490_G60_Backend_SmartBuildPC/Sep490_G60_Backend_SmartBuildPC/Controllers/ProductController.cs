@@ -280,6 +280,30 @@ public async Task<ActionResult<ApiResponse>> UpdateProduct(int id, [FromBody] Up
 
 
 
+    [HttpPost("FilterProductsHome")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+public async Task<ActionResult<ApiResponse>> FilterProducts([FromBody] ProductFilterDTOHome filterDTO)
+{
+    var _response = new ApiResponse();
+    try
+    {
+        var products = await repository.FilterProducts(filterDTO);
+        _response.StatusCode = HttpStatusCode.OK;
+        _response.Result = products;
+        _response.IsSuccess = true;
+        return Ok(_response);
+    }
+    catch (Exception ex)
+    {
+        _response.IsSuccess = false;
+        _response.ErrorMessages = new List<string> { ex.Message };
+        return StatusCode(StatusCodes.Status500InternalServerError, _response);
+    }
+}
+
+
+
 
     }
     }
