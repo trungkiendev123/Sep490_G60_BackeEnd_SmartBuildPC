@@ -18,6 +18,11 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
 
 
     Task<PreviewProductDTO> PreviewProduct(int id);
+    Task<ProductDTO> CreateProduct(CreateProductDTO createProductDTO);
+    Task<ProductDetailsDTO> GetProductDetailsWithSimilarPriceRange(int id, decimal priceRange);
+    Task<bool> DeleteProduct(int id);
+    Task<ProductDTO> UpdateProduct(int id, UpdateProductDTO updateProductDTO);
+    Task<List<ProductDTO>> FilterProducts(ProductFilterDTOHome filterDTO);
 
 }
 }
