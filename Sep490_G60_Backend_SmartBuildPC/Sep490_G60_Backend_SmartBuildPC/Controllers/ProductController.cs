@@ -281,8 +281,8 @@ public async Task<ActionResult<ApiResponse>> UpdateProduct(int id, [FromBody] Up
 
 
     [HttpPost("FilterProductsHome")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+[ProducesResponseType(StatusCodes.Status200OK)]
+[ProducesResponseType(StatusCodes.Status400BadRequest)]
 public async Task<ActionResult<ApiResponse>> FilterProducts([FromBody] ProductFilterDTOHome filterDTO)
 {
     var _response = new ApiResponse();
@@ -301,7 +301,6 @@ public async Task<ActionResult<ApiResponse>> FilterProducts([FromBody] ProductFi
         return StatusCode(StatusCodes.Status500InternalServerError, _response);
     }
 }
-
 
 
 
