@@ -543,7 +543,7 @@ public async Task<ProductDTO> UpdateProduct(int id, UpdateProductDTO updateProdu
     
     
     
-   public async Task<List<ProductDTO>> FilterProducts(ProductFilterDTOHome filterDTO)
+  public async Task<List<ProductDTO>> FilterProducts(ProductFilterDTOHome filterDTO)
 {
     var query = _context.Products.AsQueryable();
 
@@ -552,19 +552,19 @@ public async Task<ProductDTO> UpdateProduct(int id, UpdateProductDTO updateProdu
         query = query.Where(p => p.ProductStores.Any(ps => ps.Store.StoreName == filterDTO.StoreName));
     }
 
-    if (filterDTO.PriceFrom.HasValue && filterDTO.PriceFrom.Value > 0)
+    if (filterDTO.PriceFrom.HasValue)
     {
         query = query.Where(p => p.Price >= filterDTO.PriceFrom.Value);
     }
 
-    if (filterDTO.PriceTo.HasValue && filterDTO.PriceTo.Value > 0)
+    if (filterDTO.PriceTo.HasValue)
     {
         query = query.Where(p => p.Price <= filterDTO.PriceTo.Value);
     }
 
-    if (!string.IsNullOrEmpty(filterDTO.Category) && filterDTO.Category != "string")
+    if (filterDTO.CategoryId.HasValue)
     {
-        query = query.Where(p => p.Category.CategoryName == filterDTO.Category);
+        query = query.Where(p => p.CategoryId == filterDTO.CategoryId.Value);
     }
 
     var products = await query.Select(p => new ProductDTO
