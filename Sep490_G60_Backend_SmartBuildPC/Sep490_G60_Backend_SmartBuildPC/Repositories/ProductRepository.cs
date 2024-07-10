@@ -567,6 +567,18 @@ public async Task<ProductDTO> UpdateProduct(int id, UpdateProductDTO updateProdu
         query = query.Where(p => p.CategoryId == filterDTO.CategoryId.Value);
     }
 
+    if (filterDTO.InStock.HasValue)
+    {
+        if (filterDTO.InStock.Value)
+        {
+            query = query.Where(p => p.ProductStores.Any(ps => ps.StockQuantity > 0));
+        }
+        else
+        {
+            query = query.Where(p => p.ProductStores.All(ps => ps.StockQuantity == 0));
+        }
+    }
+
     var products = await query.Select(p => new ProductDTO
     {
         ProductId = p.ProductId,
