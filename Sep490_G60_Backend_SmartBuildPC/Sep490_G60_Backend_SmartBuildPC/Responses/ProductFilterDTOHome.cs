@@ -8,5 +8,6 @@
         public decimal? PriceTo { get; set; }
 
         public int? CategoryId { get; set; }
+        public bool? InStock { get; set; }
     }
 }
