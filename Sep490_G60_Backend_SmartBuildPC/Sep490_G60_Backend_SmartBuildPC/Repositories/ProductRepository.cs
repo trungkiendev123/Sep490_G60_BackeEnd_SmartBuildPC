@@ -85,7 +85,9 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
                     Warranty = n.Warranty,
                     Brand = n.Brand,
                     Tag = n.Tag,
-                    TDP = (int)n.Tdp
+                    TDP = (int)n.Tdp,
+                    ImageLink = n.ImageLink,
+                    StoreNames = n.ProductStores.Select(ps => ps.Store.StoreName).ToList()
                 })
                 .ToListAsync();
 
@@ -159,7 +161,9 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
                     Warranty = n.Warranty,
                     Brand = n.Brand,
                     Tag = n.Tag,
-                    TDP = (int)n.Tdp
+                    TDP = (int)n.Tdp,
+                    ImageLink = n.ImageLink,
+                    StoreNames = n.ProductStores.Select(ps => ps.Store.StoreName).ToList()
                 })
                 .ToListAsync();
 
