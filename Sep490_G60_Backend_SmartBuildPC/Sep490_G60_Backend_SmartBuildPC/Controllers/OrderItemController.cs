@@ -52,6 +52,30 @@ namespace Sep490_G60_Backend_SmartBuildPC.Controllers
 
 
 
+
+        [HttpPost("CreateOrderItem")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<ApiResponse>> CreateOrderItem([FromBody] CreateOrderItemDTO createOrderItemDTO)
+{
+        var _response = new ApiResponse();
+        try
+    {
+        await repository.CreateOrderItemAsync(createOrderItemDTO);
+        _response.StatusCode = HttpStatusCode.OK;
+        _response.IsSuccess = true;
+        return Ok(_response);
+    }
+    catch (Exception ex)
+    {
+        _response.IsSuccess = false;
+        _response.ErrorMessages = new List<string> { ex.Message };
+        return StatusCode(StatusCodes.Status500InternalServerError, _response);
+    }
+}
+
+
+
         [HttpGet("GetAllOrderItems")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
