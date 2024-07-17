@@ -304,5 +304,36 @@ public async Task<ActionResult<ApiResponse>> FilterProducts([FromBody] ProductFi
 
 
 
+
+[HttpPost("UpdateImageLink")]
+[ProducesResponseType(StatusCodes.Status200OK)]
+[ProducesResponseType(StatusCodes.Status400BadRequest)]
+[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+public async Task<ActionResult<ApiResponse>> UpdateImageLink([FromBody] UpdateImageLinkDTO updateImageLinkDTO)
+{
+    var _response = new ApiResponse();
+    try
+    {
+        await repository.UpdateImageLinkAsync(updateImageLinkDTO.ProductId); 
+        _response.StatusCode = HttpStatusCode.OK;
+        _response.IsSuccess = true;
+        return Ok(_response);
+    }
+    catch (InvalidOperationException ex)
+    {
+        _response.IsSuccess = false;
+        _response.ErrorMessages = new List<string> { ex.Message };
+        return BadRequest(_response);
+    }
+    catch (Exception ex)
+    {
+        _response.IsSuccess = false;
+        _response.ErrorMessages = new List<string> { ex.Message };
+        return StatusCode(StatusCodes.Status500InternalServerError, _response);
+    }
+}
+
+
+
     }
     }
