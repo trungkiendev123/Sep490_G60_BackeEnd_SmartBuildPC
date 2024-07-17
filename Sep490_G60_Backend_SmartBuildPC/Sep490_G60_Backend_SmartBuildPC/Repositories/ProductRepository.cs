@@ -602,5 +602,35 @@ public async Task<ProductDTO> UpdateProduct(int id, UpdateProductDTO updateProdu
 }
 
 
+
+
+public async Task UpdateImageLinkAsync(int productId)
+{
+    var product = await _context.Products.FindAsync(productId);
+    if (product == null)
+    {
+        throw new InvalidOperationException($"Product with ID {productId} not found.");
+    }
+
+    
+    string fileId = ExtractFileIdFromGoogleDriveUrl(product.ImageLink);
+    if (fileId == null)
+    {
+        throw new InvalidOperationException("Invalid Google Drive URL.");
+    }
+
+    product.ImageLink = $"https://drive.google.com/thumbnail?id={fileId}";
+
+    await _context.SaveChangesAsync();
+}
+
+private string ExtractFileIdFromGoogleDriveUrl(string url)
+{
+    
+    var match = Regex.Match(url, @"(?:/d/|id=)([^/]+)");
+    return match.Success ? match.Groups[1].Value : null;
+}
+
+
 }
 }
