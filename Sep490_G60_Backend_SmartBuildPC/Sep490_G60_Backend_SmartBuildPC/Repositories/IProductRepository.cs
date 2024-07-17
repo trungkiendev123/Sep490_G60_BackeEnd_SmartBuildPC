@@ -23,6 +23,7 @@ namespace Sep490_G60_Backend_SmartBuildPC.Repositories
     Task<bool> DeleteProduct(int id);
     Task<ProductDTO> UpdateProduct(int id, UpdateProductDTO updateProductDTO);
     Task<List<ProductDTO>> FilterProducts(ProductFilterDTOHome filterDTO);
+    Task UpdateImageLinkAsync(int productId);
 
 }
 }
